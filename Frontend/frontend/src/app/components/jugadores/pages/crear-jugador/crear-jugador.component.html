@@ -1,0 +1,43 @@
+<div class="form-container">
+    <div class="card">
+        <h2>Registrar Jugador (Equipo ID: {{ idEquipo }})</h2>
+
+        <div *ngIf="errorMessage" class="error-message">
+            {{ errorMessage }}
+        </div>
+
+        <form [formGroup]="jugadorForm" (ngSubmit)="guardarJugador()">
+            
+            <input type="hidden" formControlName="id_equipo">
+
+            <div class="input-group">
+                <label for="nombre">Nombre Completo</label>
+                <input type="text" formControlName="nombre" placeholder="Ej: Isagi Yoichi" required>
+                <div *ngIf="jugadorForm.get('nombre')?.invalid && jugadorForm.get('nombre')?.touched" class="validation-error">
+                    El nombre es obligatorio.
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="posicion">Posición</label>
+                <select formControlName="posicion" required>
+                    <option value="">Seleccione Posición</option>
+                    <option value="Delantero">Delantero</option>
+                    <option value="Medio">Medio Campista</option>
+                    <option value="Defensa">Defensa</option>
+                    <option value="Portero">Portero</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="fecha_nacimiento">Fecha de Nacimiento</label>
+                <input type="date" formControlName="fecha_nacimiento" required>
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="cancel-button" (click)="cancelar()">Cancelar</button>
+                <button type="submit" [disabled]="jugadorForm.invalid" class="save-button">Guardar Jugador</button>
+            </div>
+        </form>
+    </div>
+</div>

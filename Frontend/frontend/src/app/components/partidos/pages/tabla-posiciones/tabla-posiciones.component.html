@@ -1,0 +1,36 @@
+<div class="main-container">
+    <h2>Tabla de Posiciones - Torneo #{{ idTorneo }}</h2>
+    <p class="summary-text">Los datos reflejan solo los partidos que ya tienen un resultado registrado.</p>
+
+    <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+    </div>
+
+    <table *ngIf="(tablaPosiciones$ | async) as tabla">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Equipo</th>
+                <th>PJ</th>
+                <th>Pts</th>
+                <th>GF</th>
+                <th>GA</th>
+                <th>DG</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngIf="tabla.length === 0">
+                <td colspan="7" class="no-data">Aún no hay equipos con partidos finalizados.</td>
+            </tr>
+            <tr *ngFor="let equipo of tabla; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ equipo.equipo_nombre }}</td>
+                <td>{{ equipo.PJ }}</td>
+                <td class="bold-points">{{ equipo.Pts }}</td>
+                <td>{{ equipo.GF }}</td>
+                <td>{{ equipo.GA }}</td>
+                <td>{{ equipo.DG > 0 ? '+' + equipo.DG : equipo.DG }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

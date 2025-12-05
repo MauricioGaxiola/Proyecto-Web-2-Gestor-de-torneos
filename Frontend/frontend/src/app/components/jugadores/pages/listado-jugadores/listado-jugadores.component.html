@@ -1,0 +1,64 @@
+<div class="main-container">
+
+    <h2>Jugadores del Equipo: {{ nombreEquipo }}</h2>
+
+    <div *ngIf="error" class="error-message">
+
+        {{ error }}
+
+        <button class="back-button" (click)="volverAEquipos()">Volver al Listado de Equipos</button>
+
+    </div>
+
+    <div *ngIf="!error">
+
+        <div class="actions">
+
+            <button class="add-button" (click)="router.navigate(['/equipos', idEquipo, 'jugadores', 'crear'])">
+
+    + Agregar Nuevo Jugador
+
+</button>
+
+            <button class="back-button" (click)="volverAEquipos()">Volver a Equipos</button>
+
+        </div>
+
+        <table *ngIf="(jugadores$ | async) as jugadores; else loading">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre Completo</th>
+                    <th>Posición</th>
+                    <th>Fecha Nacimiento</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="jugadores.length === 0">
+
+                    <td colspan="5" class="no-data">Aún no hay jugadores registrados en este equipo.</td>
+
+                </tr>
+                <tr *ngFor="let jugador of jugadores">
+
+                    <td>{{ jugador.id_jugador }}</td>
+                    <td>{{ jugador.nombre }}</td>
+                    <td>{{ jugador.posicion || 'N/A' }}</td>
+                    <td>{{ jugador.fecha_nacimiento | date: 'mediumDate' }}</td>
+                    <td>
+                        <button class="action-btn edit-btn">Editar</button>
+                        <button class="action-btn delete-btn">Eliminar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <ng-template #loading>
+
+            <div class="loading">Cargando jugadores...</div>
+
+        </ng-template>
+
+    </div>
+
+</div>

@@ -1,0 +1,104 @@
+/* frontend/src/app/components/partidos/pages/listado/listado.component.scss */
+.main-container {
+    padding: 30px;
+    background-color: #f8f9fa;
+    min-height: 90vh;
+}
+
+h2 {
+    color: #004d40;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #004d40;
+    padding-bottom: 10px;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+}
+
+.add-button {
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    background-color: #00796b;
+    color: white;
+    border: none;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: white;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
+
+th {
+    background-color: #004d40;
+    color: white;
+    font-weight: 600;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+.no-data {
+    text-align: center;
+    font-style: italic;
+    color: #666;
+    padding: 20px;
+}
+
+.action-btn {
+    padding: 5px 10px;
+    margin-right: 5px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.edit-btn {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.loading {
+    text-align: center;
+    font-size: 1.2em;
+    padding: 30px;
+    color: #00796b;
+}
+
+.pendiente-chip {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    background-color: #ff9800; /* Naranja */
+    color: white;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}

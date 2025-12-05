@@ -1,0 +1,13 @@
+<nav class="navbar">
+    <div class="logo"> GESTOR DE TORNEOS</div>
+    <div class="nav-links">
+        <a [routerLink]="['/dashboard']">Dashboard</a>
+        
+        <a [routerLink]="['/torneos']">Torneos</a> 
+        
+        <a [routerLink]="['/equipos']">Equipos</a>
+        <a [routerLink]="['/partidos']">Partidos</a>
+        <a [routerLink]="['/partidos/tabla']">Tabla</a>
+        <button (click)="logout()">Cerrar Sesión</button>
+    </div>
+</nav>

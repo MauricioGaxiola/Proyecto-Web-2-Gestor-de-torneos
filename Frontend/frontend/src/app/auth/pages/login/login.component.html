@@ -1,0 +1,54 @@
+<div class="login-container">
+  <div class="card">
+    
+    <h2>Acceso Organizadores</h2>
+    <p>Gestión de Torneos de Fútbol</p>
+
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
+
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+      
+      <div class="input-group">
+        <label for="email">Email</label>
+        <input 
+          type="email" 
+          id="email" 
+          formControlName="email" 
+          placeholder="ejemplo@torneo.com"
+          required
+        >
+        <div 
+          *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" 
+          class="validation-error"
+        >
+          Email no válido.
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="password">Contraseña</label>
+        <input 
+          type="password" 
+          id="password" 
+          formControlName="password" 
+          placeholder="Ingresa tu contraseña"
+          required
+        >
+        <div 
+          *ngIf="loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched" 
+          class="validation-error"
+        >
+          La contraseña es requerida.
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="loginForm.invalid">
+        Iniciar Sesión
+      </button>
+
+      <a href="/auth/registro" class="registro-link">¿No tienes cuenta? Regístrate</a>
+    </form>
+  </div>
+</div>

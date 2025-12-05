@@ -1,0 +1,112 @@
+/* frontend/src/app/auth/pages/login/login.component.scss */
+
+// 1. Contenedor principal para centrar el formulario
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f2f5; 
+    font-family: Arial, sans-serif;
+}
+
+// 2. Estilos de la tarjeta o caja del formulario
+.card {
+    background-color: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+h2 {
+    color: #004d40; // Verde oscuro
+    margin-bottom: 5px;
+}
+
+p {
+    color: #666;
+    margin-bottom: 25px;
+}
+
+// 3. Estilos de los campos de entrada
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+input:focus {
+    border-color: #00796b; 
+    outline: none;
+}
+
+// 4. Estilos del botón
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #00796b;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 17px;
+    cursor: pointer;
+    transition: background-color 0.3s, opacity 0.3s;
+}
+
+button:hover:not([disabled]) {
+    background-color: #004d40;
+}
+
+button[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+// 5. Mensajes de validación y error
+.validation-error {
+    color: #d32f2f; // Rojo
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.error-message {
+    color: #d32f2f; 
+    border: 1px solid #ffcdd2;
+    background-color: #ffebee;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+// 6. Enlace de registro
+.registro-link {
+    display: block;
+    margin-top: 15px;
+    color: #00796b;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.registro-link:hover {
+    text-decoration: underline;
+}

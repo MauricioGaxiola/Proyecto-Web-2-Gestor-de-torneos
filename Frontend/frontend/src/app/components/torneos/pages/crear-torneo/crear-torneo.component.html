@@ -1,0 +1,55 @@
+<div class="form-container">
+    <div class="card">
+        <h2>Crear Nuevo Torneo</h2>
+        <p>Define la configuración principal de tu liga.</p>
+
+        <div *ngIf="errorMessage" class="error-message">
+            {{ errorMessage }}
+        </div>
+
+        <form [formGroup]="torneoForm" (ngSubmit)="guardarTorneo()">
+            
+            <div class="input-group">
+                <label for="nombre">Nombre del Torneo</label>
+                <input type="text" formControlName="nombre" placeholder="Ej: Liga de Otoño 2026" required>
+                <div *ngIf="torneoForm.get('nombre')?.invalid && torneoForm.get('nombre')?.touched" class="validation-error">
+                    El nombre es obligatorio y debe ser descriptivo.
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="categoria">Categoría</label>
+                <select formControlName="categoria" required>
+                    <option value="">Seleccione Categoría</option>
+                    <option value="Libre">Libre / Abierta</option>
+                    <option value="Femenil">Femenil</option>
+                    <option value="Veteranos">Veteranos (+35)</option>
+                    <option value="Sub 15">Sub 15</option>
+                </select>
+                <div *ngIf="torneoForm.get('categoria')?.invalid && torneoForm.get('categoria')?.touched" class="validation-error">
+                    La categoría es obligatoria.
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="fecha_inicio">Fecha de Inicio</label>
+                <input type="date" formControlName="fecha_inicio" required>
+            </div>
+
+            <div class="input-group">
+                <label for="fecha_fin">Fecha de Finalización</label>
+                <input type="date" formControlName="fecha_fin" required>
+            </div>
+
+            <div class="input-group">
+                <label for="costo">Costo de Inscripción ($)</label>
+                <input type="number" formControlName="costo_inscripcion" required min="0">
+            </div>
+            
+            <div class="button-group">
+                <button type="button" class="cancel-button" (click)="cancelar()">Cancelar</button>
+                <button type="submit" [disabled]="torneoForm.invalid" class="save-button">Crear Torneo</button>
+            </div>
+        </form>
+    </div>
+</div>

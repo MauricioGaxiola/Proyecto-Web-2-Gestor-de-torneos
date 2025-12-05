@@ -1,0 +1,76 @@
+/* frontend/src/app/components/partidos/pages/tabla-posiciones/tabla-posiciones.component.scss */
+
+$primary-color: #004d40;
+$header-bg: #e0f2f1;
+$points-color: #ff9800;
+
+.main-container {
+    padding: 30px;
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    min-height: 90vh;
+}
+
+h2 {
+    color: $primary-color;
+    margin-bottom: 5px;
+    font-size: 1.8em;
+}
+
+.summary-text {
+    color: #6c757d;
+    margin-bottom: 25px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    background-color: white;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: center;
+    border: 1px solid #dee2e6;
+}
+
+th {
+    background-color: $primary-color;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+
+/* Columna de puntos destacada */
+.bold-points {
+    font-weight: bold;
+    color: $points-color;
+    background-color: lighten($points-color, 45%);
+}
+
+/* Filas */
+tr:nth-child(even) {
+    background-color: #f7f7f7;
+}
+
+tr:hover {
+    background-color: $header-bg;
+}
+
+.no-data {
+    text-align: center;
+    font-style: italic;
+    color: #666;
+    padding: 20px;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}

@@ -1,0 +1,81 @@
+/* frontend/src/app/components/equipos/pages/listado/listado.component.scss */
+
+.listado-container {
+    padding: 30px;
+    font-family: Arial, sans-serif;
+}
+
+h2 {
+    color: #004d40;
+    margin-bottom: 20px;
+}
+
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding: 15px;
+    background-color: #e8f5e9; // Verde muy claro
+    border-radius: 8px;
+}
+
+.add-button {
+    padding: 10px 20px;
+    background-color: #00796b;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* Estilos de la tabla */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: white;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+    color: #333;
+    font-weight: bold;
+}
+
+/* Estilos de estado de pago */
+td.pagado {
+    color: #388e3c; // Verde oscuro
+    font-weight: bold;
+}
+
+/* Estilos de acciones */
+.action-btn {
+    padding: 6px 10px;
+    margin-right: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    background-color: #fff;
+    transition: background-color 0.2s;
+}
+
+.action-btn:hover {
+    background-color: #f0f0f0;
+}
+
+.empty-state {
+    padding: 30px;
+    text-align: center;
+    background-color: #fff3e0;
+    border: 1px solid #ffcc80;
+    border-radius: 8px;
+}

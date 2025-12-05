@@ -1,0 +1,105 @@
+/* frontend/src/app/components/torneos/pages/listado/listado.component.scss */
+
+.main-container {
+    padding: 30px;
+    background-color: #f8f9fa;
+    min-height: 90vh;
+    font-family: Arial, sans-serif;
+}
+
+h2 {
+    color: #004d40;
+    margin-bottom: 5px;
+    border-bottom: 2px solid #b2dfdb;
+    padding-bottom: 10px;
+    font-size: 1.8em;
+}
+
+.summary-text {
+    color: #6c757d;
+    margin-bottom: 20px;
+}
+
+.add-button {
+    padding: 10px 15px;
+    background-color: #00796b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.add-button:hover {
+    background-color: #004d40;
+}
+
+/* 🟢 Estilos de la Tabla (CRUCIAL PARA LA ALINEACIÓN) */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    background-color: white;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+    vertical-align: middle; /* Asegura que el contenido esté centrado verticalmente */
+}
+
+th {
+    background-color: #f2f2f2;
+    color: #333;
+    font-weight: 600;
+    font-size: 0.9em;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* 🟢 Estilos de Acciones y Chips */
+td:last-child {
+    display: flex; /* Alinea botones horizontalmente */
+    gap: 8px; /* Espacio entre botones */
+    justify-content: flex-start;
+}
+
+.action-btn {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: opacity 0.2s;
+}
+
+.view-btn {
+    background-color: #3f51b5; /* Azul para ver */
+    color: white;
+}
+
+.edit-btn {
+    background-color: #ffc107; /* Amarillo para editar */
+    color: #333;
+}
+
+.delete-btn {
+    background-color: #f44336; /* Rojo para eliminar */
+    color: white;
+}
+
+.active-chip {
+    background-color: #4caf50; 
+    color: white;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 0.8em;
+}
+
+/* ... (otros chips: finished-chip, pending-chip) ... */

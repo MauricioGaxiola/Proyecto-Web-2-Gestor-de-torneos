@@ -1,0 +1,90 @@
+<!-- frontend/src/app/components/partidos/pages/crear-partido/crear-partido.component.html -->
+
+<div class="form-container">
+    <div class="card">
+        <!-- Título Dinámico -->
+        <h2 *ngIf="isUpdateMode">Ingresar Resultado del Partido #{{ partidoId }}</h2>
+        <h2 *ngIf="!isUpdateMode">Programar Nuevo Partido</h2>
+
+        <div *ngIf="errorMessage" class="error-message">
+            {{ errorMessage }}
+        </div>
+
+        <!-- ---------------------------------------------------- -->
+        <!-- 1. FORMULARIO PARA PROGRAMAR PARTIDO (Modo CREAR) -->
+        <!-- ---------------------------------------------------- -->
+        <form *ngIf="!isUpdateMode" [formGroup]="partidoForm" (ngSubmit)="handleSubmit()">
+            
+            <div class="input-group">
+                <label for="local">Equipo Local</label>
+                <!-- Usamos el pipe async para esperar a que los equipos carguen -->
+                <select formControlName="id_equipo_local" required>
+                    <option value="">Seleccione Equipo Local</option>
+                    <ng-container *ngIf="equipos$ | async as equipos">
+                        <option *ngFor="let equipo of equipos" [value]="equipo.id_equipo">{{ equipo.nombre }}</option>
+                    </ng-container>
+                </select>
+                <!-- ... (Validación) ... -->
+            </div>
+
+            <div class="input-group">
+                <label for="visitante">Equipo Visitante</label>
+                <select formControlName="id_equipo_visitante" required>
+                    <option value="">Seleccione Equipo Visitante</option>
+                    <ng-container *ngIf="equipos$ | async as equipos">
+                        <option *ngFor="let equipo of equipos" [value]="equipo.id_equipo">{{ equipo.nombre }}</option>
+                    </ng-container>
+                </select>
+                <!-- ... (Validación) ... -->
+            </div>
+
+            <div class="input-group">
+                <label for="fecha">Fecha del Partido</label>
+                <input type="date" formControlName="fecha_partido" required>
+            </div>
+
+            <div class="input-group">
+                <label for="hora">Hora del Partido</label>
+                <input type="time" formControlName="hora_partido" required>
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="cancel-button" (click)="cancelar()">Cancelar</button>
+                <button type="submit" [disabled]="partidoForm.invalid" class="save-button">Programar Partido</button>
+            </div>
+        </form>
+
+
+        <!-- ---------------------------------------------------- -->
+        <!-- 2. FORMULARIO PARA INGRESAR RESULTADO (Modo ACTUALIZAR) -->
+        <!-- ---------------------------------------------------- -->
+        <form *ngIf="isUpdateMode" [formGroup]="resultadoForm" (ngSubmit)="handleSubmit()">
+            
+            <p *ngIf="partidoActual">Ingresa el marcador final del encuentro:</p>
+            <p *ngIf="!partidoActual">Cargando detalles del partido...</p>
+
+            <ng-container *ngIf="partidoActual">
+                
+                <div class="input-group">
+                    <!-- CORRECCIÓN: Mostramos el nombre del Equipo Local -->
+                    <label for="local">Goles Equipo Local ({{ partidoActual.nombre_local }})</label>
+                    <input type="number" formControlName="resultado_local" required min="0">
+                    <!-- ... (Validación) ... -->
+                </div>
+
+                <div class="input-group">
+                    <!-- CORRECCIÓN: Mostramos el nombre del Equipo Visitante -->
+                    <label for="visitante">Goles Equipo Visitante ({{ partidoActual.nombre_visitante }})</label>
+                    <input type="number" formControlName="resultado_visitante" required min="0">
+                     <!-- ... (Validación) ... -->
+                </div>
+
+            </ng-container>
+
+            <div class="button-group">
+                <button type="button" class="cancel-button" (click)="cancelar()">Cancelar</button>
+                <button type="submit" [disabled]="resultadoForm.invalid" class="save-button">Guardar Resultado</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,55 @@
+<div class="main-container">
+    <h2>Listado de Partidos</h2>
+
+    <div *ngIf="error" class="error-message">
+        {{ error }}
+    </div>
+
+    <div class="actions" *ngIf="!error">
+        <button class="add-button" (click)="crearPartido()">+ Programar Nuevo Partido</button>
+    </div>
+
+    <table *ngIf="(partidos$ | async) as partidos; else loading">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Equipo Local</th>
+                <th>Equipo Visitante</th>
+                <th>Fecha y Hora</th>
+                <th>Resultado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngIf="partidos.length === 0">
+                <td colspan="6" class="no-data">Aún no hay partidos programados o jugados.</td>
+            </tr>
+            <tr *ngFor="let partido of partidos">
+                <td>{{ partido.id_partido }}</td>
+                <td>{{ partido.nombre_local }}</td>
+                <td>{{ partido.nombre_visitante }}</td>
+                <td>{{ formatearFecha(partido.fecha_hora) }}</td>
+                <td>
+                    <span *ngIf="partido.resultado_local !== null; else pendiente">
+                        {{ partido.resultado_local }} - {{ partido.resultado_visitante }}
+                    </span>
+                    <ng-template #pendiente>
+                        <span class="pendiente-chip">Pendiente</span>
+                    </ng-template>
+                </td>
+                <td>
+                    <a *ngIf="partido.id_partido"
+   [routerLink]="['/partidos', 'actualizar', partido.id_partido]" 
+   class="action-btn edit-btn update-btn">
+    Actualizar Resultado
+</a>
+                    <button class="action-btn delete-btn">Eliminar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ng-template #loading>
+        <div class="loading">Cargando partidos...</div>
+    </ng-template>
+</div>

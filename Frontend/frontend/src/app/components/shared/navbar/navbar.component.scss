@@ -1,0 +1,64 @@
+/* frontend/src/app/components/shared/navbar/navbar.component.scss */
+
+$primary-color: #004d40; // Verde Oscuro (para el fondo)
+$secondary-color: #e0f2f1; // Verde Muy Claro (para el fondo)
+$text-color: #ffffff; // Blanco
+$hover-color: #00796b; // Verde de acento
+
+.navbar {
+    /* 1. Estructura Flexbox para alinear elementos */
+    display: flex;
+    justify-content: space-between; /* Mueve logo a la izquierda y links a la derecha */
+    align-items: center; /* Centra verticalmente */
+    
+    /* 2. Colores y Dimensiones */
+    background-color: $primary-color;
+    padding: 15px 30px; /* Padding interno */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+.logo {
+    color: $text-color;
+    font-size: 1.5em; /* Tamaño grande */
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+.nav-links {
+    /* Flexbox para alinear los enlaces internamente */
+    display: flex;
+    align-items: center; 
+    gap: 20px; /* Espacio entre cada enlace/botón */
+}
+
+/* Estilos de los enlaces (a) */
+.nav-links a {
+    color: $text-color;
+    text-decoration: none; /* Quitar subrayado */
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+    font-size: 1em;
+}
+
+.nav-links a:hover {
+    background-color: $hover-color; /* Fondo más claro al pasar el mouse */
+    color: $text-color;
+}
+
+/* Estilo del botón (Cerrar Sesión) */
+.nav-links button {
+    background-color: #f44336; /* Rojo para acción de salir */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.nav-links button:hover {
+    background-color: #d32f2f;
+}

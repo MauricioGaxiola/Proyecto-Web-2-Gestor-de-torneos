@@ -1,0 +1,66 @@
+<div class="main-container">
+    <h2>Listado General de Torneos</h2>
+    <p class="summary-text">Aquí puedes ver, crear y gestionar todas tus ligas.</p>
+
+    <button class="add-button" (click)="router.navigateByUrl('/torneos/crear')">
+        + Crear Nuevo Torneo
+    </button>
+
+    <div *ngIf="error" class="error-message">
+        {{ error }}
+    </div>
+
+    <table *ngIf="(torneos$ | async) as torneos; else loading">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Fecha Inicio</th>
+                <th>Fecha Fin</th>
+                <th>Costo</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngIf="torneos.length === 0">
+                <td colspan="8" class="no-data">Aún no hay torneos registrados.</td>
+            </tr>
+            <tr *ngFor="let torneo of torneos">
+           <td>{{ torneo.id_torneo }}</td>
+           <td>{{ torneo.nombre }}</td>
+           <td>{{ torneo.categoria }}</td>
+           <td>{{ torneo.fecha_inicio | date: 'mediumDate' }}</td>
+           <td>{{ torneo.fecha_fin | date: 'mediumDate' }}</td>
+           <td>{{ torneo.costo_inscripcion | currency: 'USD' }}</td>
+                <td>
+          <span [ngClass]="{
+          'active-chip': torneo.estado === 'activo',
+          'finished-chip': torneo.estado === 'finalizado',
+          'pending-chip': torneo.estado === 'pendiente'
+                    }">
+                        {{ torneo.estado | uppercase }}
+                    </span>
+                </td>
+                <td>
+                 <a [routerLink]="['/equipos', torneo.id_torneo]" 
+                       class="action-btn view-btn">
+                        Ver Equipos
+                    </a>
+                    <button class="action-btn edit-btn" (click)="editarTorneo(torneo.id_torneo!)">Editar</button>
+                    
+                    <button 
+        class="action-btn delete-btn" 
+        (click)="eliminarTorneo(torneo.id_torneo!, torneo.nombre)">
+Eliminar
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+
+    <ng-template #loading>
+        <div class="loading">Cargando torneos...</div>
+    </ng-template>
+</div>

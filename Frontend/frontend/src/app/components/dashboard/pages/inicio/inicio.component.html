@@ -1,0 +1,75 @@
+
+<div class="main-content dashboard-container">
+    <h1>Dashboard Principal</h1>
+    <p>Resumen y Acciones Rápidas del Torneo.</p>
+
+    <ng-container *ngIf="resumen$ | async as resumen; else loading">
+        
+        <div *ngIf="error" class="error-message">
+            {{ error }}
+        </div>
+
+        <div class="summary-cards">
+            <div class="card stat-card">
+                <h3>Equipos Inscritos</h3>
+                <div class="value">{{ resumen.totalEquipos }}</div>
+                <small>Equipos en Torneo #{{ idTorneoActivo }}</small>
+            </div>
+            
+            <div class="card stat-card">
+                <h3>Partidos Programados</h3>
+                <div class="value">{{ resumen.totalPartidos }}</div>
+                <small>Total en el sistema</small>
+            </div>
+
+            <div class="card stat-card">
+                <h3>Mejor Clasificado</h3>
+                <div class="value">{{ resumen.mejorEquipoNombre || 'N/A' }}</div>
+                <small>Líder actual (Pts)</small>
+            </div>
+        </div>
+
+        <div class="next-matches-card card">
+            <h3>Próximos Encuentros (Top 3)</h3>
+            <table class="match-table">
+                <thead>
+                    <tr>
+                        <th>Local</th>
+                        <th>Visitante</th>
+                        <th>Fecha y Hora</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngIf="resumen.proximosPartidos?.length === 0">
+                        <td colspan="4" class="no-data">No hay partidos pendientes.</td>
+                    </tr>
+                    <tr *ngFor="let partido of resumen.proximosPartidos">
+                        <td>{{ partido.nombre_local || 'Equipo' }}</td> 
+                        <td>{{ partido.nombre_visitante || 'Equipo' }}</td>
+                        <td>{{ partido.fecha_hora | date: 'medium' }}</td>
+                        <td>
+                            <a [routerLink]="['/partidos/actualizar', partido.id_partido]" class="action-link">Ingresar Resultado</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </ng-container>
+
+    <ng-template #loading>
+        <div class="loading">Cargando resumen del torneo...</div>
+    </ng-template>
+
+    <div class="action-card quick-actions">
+        <a [routerLink]="['/torneos/crear']" class="action-button primary">
+            + Crear Nuevo Torneo
+        </a>
+        <a [routerLink]="['/equipos/crear']" class="action-button secondary">
+            + Registrar Equipo
+        </a>
+        <a [routerLink]="['/partidos/tabla']" class="action-button tertiary">
+            Ver Tabla de Posiciones
+        </a>
+    </div>
+</div>

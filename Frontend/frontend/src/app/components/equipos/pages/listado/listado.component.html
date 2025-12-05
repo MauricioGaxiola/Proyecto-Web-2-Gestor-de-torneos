@@ -1,0 +1,52 @@
+ <div class="listado-container">
+    <h2>Gestión de Equipos</h2>
+
+    <div class="toolbar">
+        <p>Torneo Actual: {{ nombreTorneoActivo }} (ID: {{ idTorneoActivo }})</p>
+        
+                <button 
+            class="add-button" 
+            [routerLink]="['/equipos/crear', idTorneoActivo]"> 
+            + Agregar Nuevo Equipo
+        </button>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+    <div *ngIf="equipos.length === 0 && !errorMessage" class="empty-state">
+        <p>Aún no hay equipos registrados en este torneo.</p>
+    </div>
+
+    <table *ngIf="equipos.length > 0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre del Equipo</th>
+                <th>Capitán</th>
+                <th>Teléfono</th>
+                <th>Estado de Pago</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let equipo of equipos">
+                <td>{{ equipo.id_equipo }}</td>
+                <td>{{ equipo.nombre }}</td>
+                <td>{{ equipo.contacto_capitan }}</td>
+                <td>{{ equipo.telefono_capitan }}</td>
+                <td [class.pagado]="equipo.pagado">{{ equipo.pagado ? 'Pagado' : 'Pendiente' }}</td>
+                <td>
+                     <a [routerLink]="['/', 'equipos', equipo.id_equipo, 'jugadores']" class="action-btn view-btn">Ver Jugadores</a>
+                    
+                     <a [routerLink]="['/equipos/editar', equipo.id_equipo]" class="action-btn edit-btn">Editar</a>
+                    
+                     <button 
+                        class="action-btn delete-btn" 
+                        (click)="eliminarEquipo(equipo.id_equipo!, equipo.nombre)">
+                        Eliminar
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

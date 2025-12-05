@@ -1,0 +1,138 @@
+/* frontend/src/app/components/dashboard/pages/inicio/inicio.component.scss */
+
+$primary-color: #004d40; 
+$accent-color: #00796b; 
+$card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+.dashboard-container {
+    padding: 30px;
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    color: $primary-color;
+    margin-bottom: 5px;
+}
+
+.summary-cards {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 40px;
+    justify-content: center;
+}
+
+.card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: $card-shadow;
+}
+
+/* Estilos de las tarjetas de estadísticas */
+.stat-card {
+    flex-basis: 30%;
+    text-align: center;
+    border-top: 5px solid $accent-color;
+}
+
+.stat-card h3 {
+    font-size: 1.1em;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.stat-card .value {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: $primary-color;
+}
+
+.stat-card small {
+    display: block;
+    color: #aaa;
+    margin-top: 5px;
+}
+
+/* Estilos de la sección de próximos partidos */
+.next-matches-card {
+    max-width: 900px;
+    margin: 0 auto 40px;
+}
+
+.match-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.match-table th, .match-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.match-table th {
+    background-color: #f2f2f2;
+    color: #333;
+    font-weight: 600;
+}
+
+.match-table tr:hover {
+    background-color: #f7f7f7;
+}
+
+.action-link {
+    color: $accent-color;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.action-link:hover {
+    text-decoration: underline;
+}
+
+.no-data {
+    font-style: italic;
+    color: #999;
+    text-align: center;
+}
+
+/* Estilos de botones de acción rápida */
+.quick-actions {
+    display: flex;
+    max-width: 900px;
+    margin: 0 auto;
+    gap: 15px;
+    justify-content: space-between;
+}
+
+.action-button {
+    flex-grow: 1;
+    padding: 15px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    text-align: center;
+    transition: transform 0.2s;
+    font-size: 1em;
+}
+
+.primary {
+    background-color: #00796b;
+    color: white;
+}
+
+.secondary {
+    background-color: #ff9800;
+    color: white;
+}
+
+.tertiary {
+    background-color: #3f51b5;
+    color: white;
+}
+
+.action-button:hover {
+    transform: translateY(-2px);
+    opacity: 0.95;
+}

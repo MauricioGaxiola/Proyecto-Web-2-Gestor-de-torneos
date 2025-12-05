@@ -1,0 +1,45 @@
+<div class="form-container">
+    <div class="card">
+        <h2>Registrar Nuevo Equipo</h2>
+
+        <div *ngIf="errorMessage" class="error-message">
+            {{ errorMessage }}
+        </div>
+
+        <form [formGroup]="equipoForm" (ngSubmit)="guardarEquipo()">
+            
+            <input type="hidden" formControlName="id_torneo">
+
+            <div class="input-group">
+                <label for="nombre">Nombre del Equipo</label>
+                <input type="text" formControlName="nombre" placeholder="Ej: Rayos del Norte" required>
+                <div *ngIf="equipoForm.get('nombre')?.invalid && equipoForm.get('nombre')?.touched" class="validation-error">
+                    El nombre es obligatorio y debe tener al menos 3 caracteres.
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="contacto_capitan">Nombre del Capitán</label>
+                <input type="text" formControlName="contacto_capitan" placeholder="Nombre completo" required>
+                <div *ngIf="equipoForm.get('contacto_capitan')?.invalid && equipoForm.get('contacto_capitan')?.touched" class="validation-error">
+                    El nombre del capitán es obligatorio.
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="telefono_capitan">Teléfono</label>
+                <input type="text" formControlName="telefono_capitan" placeholder="Ej: 555-1234" required>
+            </div>
+
+            <div class="input-group checkbox-group">
+                <input type="checkbox" id="pagado" formControlName="pagado">
+                <label for="pagado">Inscripción Pagada</label>
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="cancel-button" (click)="cancelar()">Cancelar</button>
+                <button type="submit" [disabled]="equipoForm.invalid" class="save-button">Guardar Equipo</button>
+            </div>
+        </form>
+    </div>
+</div>
