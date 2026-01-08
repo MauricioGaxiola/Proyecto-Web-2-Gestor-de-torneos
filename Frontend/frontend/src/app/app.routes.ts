@@ -4,7 +4,7 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './auth/pages/login/login.component';
 
 // Importación del AuthGuard
-import { authGuard } from './auth/guards/auth.guard'; // <--- Importamos la función Guard
+import { authGuard } from './auth/guards/auth.guard'; 
 
 // Componentes de Equipos
 import { ListadoComponent as EquiposListado } from './components/equipos/pages/listado/listado.component';
@@ -23,9 +23,12 @@ import { TablaPosicionesComponent } from './components/partidos/pages/tabla-posi
 import { CrearTorneoComponent } from './components/torneos/pages/crear-torneo/crear-torneo.component'; 
 import { ListadoComponent as TorneosListado } from './components/torneos/pages/listado/listado.component'; 
 
+//  NUEVA IMPORTACIÓN: Recuperar Contraseña
+import { ForgotPasswordComponent } from './auth/pages/forgot-password/forgot-password.component';
+
 
 export const routes: Routes = [
-    // Rutas públicas (Login/Registro)
+    // Rutas públicas (Login/Registro/Recuperar)
     {
         path: 'auth/login',
         component: LoginComponent 
@@ -33,6 +36,11 @@ export const routes: Routes = [
     {
         path: 'auth/registro',
         loadComponent: () => import('./auth/pages/registro/registro.component').then(m => m.RegistroComponent)
+    },
+    {
+        //  RUTA AÑADIDA: Recuperar Contraseña
+        path: 'auth/forgot-password',
+        component: ForgotPasswordComponent
     },
     
     // =============================================================
@@ -42,7 +50,7 @@ export const routes: Routes = [
     {
         path: 'dashboard',
         loadComponent: () => import('./components/dashboard/pages/inicio/inicio.component').then(m => m.InicioComponent),
-        canActivate: [authGuard] // <--- PROTECCIÓN AÑADIDA
+        canActivate: [authGuard] 
     },
     
     // RUTAS DE TORNEOS
@@ -79,43 +87,41 @@ export const routes: Routes = [
         canActivate: [authGuard] 
     },
 
-    // Rutas Anidadas para Equipos y Jugadores (CORRECCIÓN CLAVE)
+    // Rutas Anidadas para Equipos y Jugadores
     {
         path: 'equipos',
         canActivate: [authGuard], 
         children: [
-            // 🛑 RUTA POR DEFECTO: Si navegan a /equipos (sin ID), redirigimos a Torneos.
             {
                 path: '',
                 redirectTo: '/torneos', 
                 pathMatch: 'full'
             },
-            
-            // 🟢 RUTA DEL LISTADO: CAPTURA EL ID DEL TORNEO (El componente EquiposListado lo lee)
             {
-                path: ':idTorneo', // Ruta: /equipos/1
+                path: ':idTorneo', 
                 component: EquiposListado,
             },
-            
-            // RUTA DE CREACIÓN DE EQUIPOS (Ahora es relativa al path /equipos/crear)
-            // 🛑 CORRECCIÓN: La creación necesita el ID del torneo para funcionar
             {
-                path: 'crear/:idTorneo', // Ruta: /equipos/crear/1
+                path: 'crear/:idTorneo', 
                 component: EquiposCrear,
             },
             {
-                path: 'editar/:id', // Ruta para editar un equipo específico
+                path: 'editar/:id', 
                 component: EquiposCrear,
             },
             
-            // RUTA ANIDADA DE JUGADORES (Listado)
+            // RUTAS DE JUGADORES
             {
-                path: ':idEquipo/jugadores', // Ruta: /equipos/1/jugadores
+                path: ':idEquipo/jugadores', 
                 component: ListadoJugadoresComponent,
             },
-            // RUTA DE CREACIÓN DE JUGADORES
             {
                 path: ':idEquipo/jugadores/crear', 
+                component: CrearJugadorComponent,
+            },
+            {
+                //  RUTA AÑADIDA: Editar Jugador (Reutiliza el componente de crear)
+                path: ':idEquipo/jugadores/editar/:id', 
                 component: CrearJugadorComponent,
             },
         ]

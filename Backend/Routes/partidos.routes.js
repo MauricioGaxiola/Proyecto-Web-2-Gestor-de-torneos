@@ -5,12 +5,10 @@ const { verificarToken } = require('../Middlewares/outh.middleware');
 
 // 1. OBTENER TODOS LOS PARTIDOS (GET /api/v1/partidos)
 router.get('/', verificarToken, async (req, res) => {
-    // El ID del usuario se obtiene del token JWT
     const idUsuario = req.user.id;
-    // Se eliminó el console.log('Datos recibidos:', req.body) para evitar confusión en los GET.
     
     try {
-        // Consulta simplificada para obtener los partidos y nombres de equipos
+        // CORRECCIÓN: Tablas en minúsculas (partidos, equipos, torneos)
         const query = `
             SELECT 
                 p.id_partido, 
@@ -22,20 +20,19 @@ router.get('/', verificarToken, async (req, res) => {
                 p.resultado_local, 
                 p.resultado_visitante 
             FROM 
-                Partidos p
+                partidos p
             JOIN 
-                Equipos e_local ON p.id_equipo_local = e_local.id_equipo
+                equipos e_local ON p.id_equipo_local = e_local.id_equipo
             JOIN 
-                Equipos e_visitante ON p.id_equipo_visitante = e_visitante.id_equipo
+                equipos e_visitante ON p.id_equipo_visitante = e_visitante.id_equipo
             JOIN
-                Torneos t ON e_local.id_torneo = t.id_torneo
+                torneos t ON e_local.id_torneo = t.id_torneo
             WHERE
                 t.id_usuario_organizador = ?
             ORDER BY 
                 p.fecha_hora DESC;
         `;
         
-        // Ejecutamos la consulta filtrando por el ID del usuario organizador
         const [rows] = await req.db.query(query, [idUsuario]);
         
         res.status(200).json(rows); 
@@ -46,14 +43,13 @@ router.get('/', verificarToken, async (req, res) => {
     }
 });
 
-// backend/routes/partidos.routes.js
-
-// 3. OBTENER DETALLE DE UN PARTIDO (GET /api/v1/partidos/:id)
+// 2. OBTENER DETALLE DE UN PARTIDO (GET /api/v1/partidos/:id)
 router.get('/:id', verificarToken, async (req, res) => {
     const idPartido = req.params.id;
     const idUsuario = req.user.id;
 
     try {
+        // CORRECCIÓN: Tablas en minúsculas
         const query = `
             SELECT 
                 p.id_partido, 
@@ -64,13 +60,13 @@ router.get('/:id', verificarToken, async (req, res) => {
                 p.resultado_local, 
                 p.resultado_visitante
             FROM 
-                Partidos p
+                partidos p
             JOIN 
-                Equipos e_local ON p.id_equipo_local = e_local.id_equipo
+                equipos e_local ON p.id_equipo_local = e_local.id_equipo
             JOIN 
-                Equipos e_visitante ON p.id_equipo_visitante = e_visitante.id_equipo
+                equipos e_visitante ON p.id_equipo_visitante = e_visitante.id_equipo
             JOIN
-                Torneos t ON e_local.id_torneo = t.id_torneo
+                torneos t ON e_local.id_torneo = t.id_torneo
             WHERE 
                 p.id_partido = ? AND t.id_usuario_organizador = ?;
         `;
@@ -81,7 +77,7 @@ router.get('/:id', verificarToken, async (req, res) => {
             return res.status(404).json({ error: 'Partido no encontrado o no te pertenece.' });
         }
         
-        res.status(200).json(rows[0]); // Devolvemos el primer (y único) resultado
+        res.status(200).json(rows[0]); 
 
     } catch (error) {
         console.error('Error al obtener detalle de partido:', error);
@@ -89,41 +85,36 @@ router.get('/:id', verificarToken, async (req, res) => {
     }
 });
 
-// 2. CREAR PARTIDO (POST /api/v1/partidos) - Implementación FINAL
+// 3. CREAR PARTIDO (POST /api/v1/partidos)
 router.post('/', verificarToken, async (req, res) => {
-    // El Frontend envía id_equipo_local, id_equipo_visitante y fecha_hora (ej: 2025-11-25 15:30)
     const { id_equipo_local, id_equipo_visitante, fecha_hora } = req.body; 
     const idUsuario = req.user.id; 
-
-    // console.log('JSON recibido para insertar:', req.body); // Si quieres debuggear el POST
 
     if (!id_equipo_local || !id_equipo_visitante || !fecha_hora) {
         return res.status(400).json({ error: 'Faltan campos obligatorios para programar el partido.' });
     }
 
     try {
-        // A. Verificamos que los equipos pertenezcan al mismo torneo y que el torneo sea del usuario (Seguridad)
+        // CORRECCIÓN: Tablas en minúsculas
         const [equiposTorneo] = await req.db.query(
-            `SELECT E.id_torneo FROM Equipos E 
-             INNER JOIN Torneos T ON E.id_torneo = T.id_torneo 
+            `SELECT E.id_torneo FROM equipos E 
+             INNER JOIN torneos T ON E.id_torneo = T.id_torneo 
              WHERE E.id_equipo IN (?, ?) AND T.id_usuario_organizador = ?`, 
             [id_equipo_local, id_equipo_visitante, idUsuario]
         );
         
-        // Si no se encuentran 2 equipos que pertenezcan a los torneos del usuario, hay un error
         if (equiposTorneo.length !== 2) {
              return res.status(403).json({ error: 'Acceso denegado. Uno o ambos equipos no existen o no te pertenecen.' });
         }
 
         // B. Insertar el nuevo partido
-        // La columna fecha_hora es DATETIME, acepta el formato YYYY-MM-DD HH:MM:SS (o sin el :SS si Angular lo omite)
+        // CORRECCIÓN: Tabla en minúsculas
         const insertQuery = `
-            INSERT INTO Partidos 
+            INSERT INTO partidos 
                 (id_equipo_local, id_equipo_visitante, fecha_hora) 
             VALUES 
                 (?, ?, ?)
         `;
-        // Usamos req.db para acceder al pool de conexiones
         const [result] = await req.db.query(insertQuery, [id_equipo_local, id_equipo_visitante, fecha_hora]); 
 
         res.status(201).json({ 
@@ -139,11 +130,10 @@ router.post('/', verificarToken, async (req, res) => {
         }
         
         res.status(500).json({ error: 'Error interno del servidor al programar partido.' });
-    }    
+    }      
 });
-// backend/routes/partidos.routes.js
 
-// 3. ACTUALIZAR RESULTADO (PUT /api/v1/partidos/resultado/:idPartido)
+// 4. ACTUALIZAR RESULTADO (PUT /api/v1/partidos/resultado/:idPartido)
 router.put('/resultado/:idPartido', verificarToken, async (req, res) => {
     const idPartido = req.params.idPartido;
     const { resultado_local, resultado_visitante } = req.body;
@@ -154,11 +144,11 @@ router.put('/resultado/:idPartido', verificarToken, async (req, res) => {
     }
 
     try {
-        // A. Seguridad: Verificar que el partido exista y pertenezca al organizador
+        // CORRECCIÓN: Tablas en minúsculas
         const [partido] = await req.db.query(`
-            SELECT p.id_partido FROM Partidos p
-            JOIN Equipos el ON p.id_equipo_local = el.id_equipo
-            JOIN Torneos t ON el.id_torneo = t.id_torneo
+            SELECT p.id_partido FROM partidos p
+            JOIN equipos el ON p.id_equipo_local = el.id_equipo
+            JOIN torneos t ON el.id_torneo = t.id_torneo
             WHERE p.id_partido = ? AND t.id_usuario_organizador = ?
         `, [idPartido, idUsuario]);
 
@@ -167,8 +157,9 @@ router.put('/resultado/:idPartido', verificarToken, async (req, res) => {
         }
         
         // B. Actualizar los resultados y marcar el partido como jugado (si es necesario)
+        // CORRECCIÓN: Tabla en minúsculas
         const updateQuery = `
-            UPDATE Partidos 
+            UPDATE partidos 
             SET resultado_local = ?, resultado_visitante = ?
             WHERE id_partido = ?
         `;
@@ -182,16 +173,12 @@ router.put('/resultado/:idPartido', verificarToken, async (req, res) => {
     }
 });
 
-// backend/routes/partidos.routes.js
-
-// 4. GENERAR TABLA DE POSICIONES (GET /api/v1/partidos/tabla/1)
+// 5. GENERAR TABLA DE POSICIONES (GET /api/v1/partidos/tabla/:idTorneo)
 router.get('/tabla/:idTorneo', verificarToken, async (req, res) => {
     const idTorneo = req.params.idTorneo;
-    // const idUsuario = req.user.id; // Podríamos usarlo, pero lo simplificaremos para el cálculo
 
     try {
-        // La consulta clave: Calcula Puntos, Goles a favor, Goles en contra, y Diferencia
-        // Esta es una consulta avanzada que procesa la lógica del fútbol (victoria=3, empate=1)
+        // CORRECCIÓN: Tablas en minúsculas (equipos, partidos)
         const query = `
             SELECT 
                 E.id_equipo,
@@ -209,15 +196,15 @@ router.get('/tabla/:idTorneo', verificarToken, async (req, res) => {
                 SUM(CASE WHEN P.id_equipo_local = E.id_equipo THEN P.resultado_local ELSE P.resultado_visitante END) AS GF,
                 SUM(CASE WHEN P.id_equipo_local = E.id_equipo THEN P.resultado_visitante ELSE P.resultado_local END) AS GA
             FROM 
-                Equipos E
+                equipos E
             LEFT JOIN 
-                Partidos P ON P.id_equipo_local = E.id_equipo OR P.id_equipo_visitante = E.id_equipo
+                partidos P ON P.id_equipo_local = E.id_equipo OR P.id_equipo_visitante = E.id_equipo
             WHERE
-                E.id_torneo = ? AND P.resultado_local IS NOT NULL /* Solo partidos jugados */
+                E.id_torneo = ? AND P.resultado_local IS NOT NULL 
             GROUP BY 
                 E.id_equipo, E.nombre
             ORDER BY 
-                Pts DESC, (GF - GA) DESC, GF DESC; /* Ordenar por Puntos, Diferencia de Goles, Goles a Favor */
+                Pts DESC, (GF - GA) DESC, GF DESC;
         `;
         
         const [rows] = await req.db.query(query, [idTorneo]);
@@ -230,14 +217,12 @@ router.get('/tabla/:idTorneo', verificarToken, async (req, res) => {
     }
 });
 
-// backend/routes/partidos.routes.js
-
-// 5. OBTENER TABLA DE GOLEADORES (GET /api/v1/partidos/goleadores/:idTorneo)
+// 6. OBTENER TABLA DE GOLEADORES (GET /api/v1/partidos/goleadores/:idTorneo)
 router.get('/goleadores/:idTorneo', verificarToken, async (req, res) => {
     const idTorneo = req.params.idTorneo;
 
     try {
-        // Consultamos las estadísticas detalladas (goles) por jugador y sumamos
+        // CORRECCIÓN: Tablas en minúsculas (jugadores, equipos) y estadísticas_detalle
         const query = `
             SELECT 
                 J.id_jugador,
@@ -245,11 +230,11 @@ router.get('/goleadores/:idTorneo', verificarToken, async (req, res) => {
                 E.nombre AS equipo_nombre,
                 COUNT(D.id_detalle) AS Goles
             FROM 
-                Estadisticas_Detalle D
+                estadisticas_detalle D 
             JOIN 
-                Jugadores J ON D.id_jugador = J.id_jugador
+                jugadores J ON D.id_jugador = J.id_jugador
             JOIN 
-                Equipos E ON J.id_equipo = E.id_equipo
+                equipos E ON J.id_equipo = E.id_equipo
             WHERE 
                 E.id_torneo = ? AND D.tipo_evento = 'gol'
             GROUP BY 

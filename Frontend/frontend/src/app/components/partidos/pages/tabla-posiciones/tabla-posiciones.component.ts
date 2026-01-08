@@ -1,34 +1,33 @@
-// frontend/src/app/components/partidos/pages/tabla-posiciones/tabla-posiciones.component.ts
-
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router'; // Importante para navegación
 import { PartidosService } from '../../services/partidos.service'; 
 import { Observable, catchError, map, of } from 'rxjs';
 
-// Definición de la estructura de la tabla (Basada en tu JSON de Postman)
 interface Posicion {
   id_equipo: number;
   equipo_nombre: string;
   PJ_Local: string;
   PJ_Visitante: string;
-  Pts: string; // Puntos
-  GF: string; // Goles a Favor
-  GA: string; // Goles en Contra
-  DG: number; // Diferencia de Goles (Calculada en Frontend)
-  PJ: number; // Partidos Jugados (Calculada en Frontend)
+  Pts: string; // Viene como string del backend
+  GF: string;
+  GA: string;
+  DG: number; // Calculado
+  PJ: number; // Calculado
 }
 
 @Component({
   selector: 'app-tabla-posiciones',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './tabla-posiciones.component.html',
   styleUrls: ['./tabla-posiciones.component.scss']
 })
 export class TablaPosicionesComponent implements OnInit {
 
   private partidosService = inject(PartidosService);
-  // Asumimos Torneo ID 1 para la prueba
+  
+  // ID del torneo (puedes hacerlo dinámico con ActivatedRoute más adelante)
   public idTorneo: number = 1; 
   
   public tablaPosiciones$!: Observable<Posicion[]>;
@@ -40,18 +39,28 @@ export class TablaPosicionesComponent implements OnInit {
 
   cargarTabla(): void {
     this.tablaPosiciones$ = this.partidosService.getTablaPosiciones(this.idTorneo).pipe(
-      // Mapeamos los datos para calcular PJ y DG en el frontend
       map(data => {
         return data.map(item => ({
           ...item,
-          // Convertimos strings a números para el cálculo
+          // 1. Cálculos de UI
           PJ: parseInt(item.PJ_Local) + parseInt(item.PJ_Visitante),
           DG: parseInt(item.GF) - parseInt(item.GA)
-        }));
+        }))
+        // 2. ORDENAMIENTO (Crucial para una tabla de posiciones)
+        .sort((a, b) => {
+          const ptsA = parseInt(a.Pts);
+          const ptsB = parseInt(b.Pts);
+          
+          // Primero ordena por Puntos (Mayor a menor)
+          if (ptsA !== ptsB) return ptsB - ptsA;
+          
+          // Si empatan en puntos, ordena por Diferencia de Goles
+          return b.DG - a.DG;
+        });
       }),
       catchError(err => {
-        this.errorMessage = 'Error al cargar la tabla. Asegúrate de tener partidos con resultados.';
-        console.error('Error de carga de tabla:', err);
+        this.errorMessage = 'No se pudieron cargar los datos. Intenta más tarde.';
+        console.error('Error:', err);
         return of([]);
       })
     );

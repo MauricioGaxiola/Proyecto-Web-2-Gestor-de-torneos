@@ -1,55 +1,89 @@
-
 <div class="main-content dashboard-container">
-    <h1>Dashboard Principal</h1>
-    <p>Resumen y Acciones Rápidas del Torneo.</p>
+    
+    <div style="margin-bottom: 32px;">
+        <h1 style="font-size: 1.8rem; font-weight: 800; color: var(--primary); margin: 0 0 8px 0;">Dashboard Principal</h1>
+        <p style="color: var(--text-muted); margin: 0;">Resumen general y métricas clave de tus torneos.</p>
+    </div>
 
     <ng-container *ngIf="resumen$ | async as resumen; else loading">
         
-        <div *ngIf="error" class="error-message">
-            {{ error }}
+        <div *ngIf="error" class="error-message" style="background: #fee2e2; color: #b91c1c; padding: 16px; border-radius: 12px; margin-bottom: 20px;">
+            <i class="fas fa-exclamation-circle"></i> {{ error }}
         </div>
 
-        <div class="summary-cards">
-            <div class="card stat-card">
-                <h3>Equipos Inscritos</h3>
-                <div class="value">{{ resumen.totalEquipos }}</div>
-                <small>Equipos en Torneo #{{ idTorneoActivo }}</small>
+        <div class="summary-cards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 40px;">
+            
+            <div class="glass-card" style="position: relative; overflow: hidden;">
+                <div style="position: absolute; top: -10px; right: -10px; opacity: 0.05; font-size: 6rem; color: var(--primary);">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3 style="color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; margin: 0 0 10px 0;">Equipos Inscritos</h3>
+                <div class="value" style="font-size: 2.5rem; font-weight: 800; color: var(--primary);">{{ resumen.totalEquipos }}</div>
+                <div style="margin-top: 8px; font-size: 0.85rem; color: var(--accent); font-weight: 600;">
+                    <i class="fas fa-check-circle"></i> En Torneo #{{ idTorneoActivo }}
+                </div>
             </div>
             
-            <div class="card stat-card">
-                <h3>Partidos Programados</h3>
-                <div class="value">{{ resumen.totalPartidos }}</div>
-                <small>Total en el sistema</small>
+            <div class="glass-card" style="position: relative; overflow: hidden;">
+                <div style="position: absolute; top: -10px; right: -10px; opacity: 0.05; font-size: 6rem; color: var(--primary);">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <h3 style="color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; margin: 0 0 10px 0;">Partidos Programados</h3>
+                <div class="value" style="font-size: 2.5rem; font-weight: 800; color: var(--primary);">{{ resumen.totalPartidos }}</div>
+                <div style="margin-top: 8px; font-size: 0.85rem; color: #3b82f6; font-weight: 600;">
+                    Total en el sistema
+                </div>
             </div>
 
-            <div class="card stat-card">
-                <h3>Mejor Clasificado</h3>
-                <div class="value">{{ resumen.mejorEquipoNombre || 'N/A' }}</div>
-                <small>Líder actual (Pts)</small>
+            <div class="glass-card" style="position: relative; overflow: hidden;">
+                <div style="position: absolute; top: -10px; right: -10px; opacity: 0.05; font-size: 6rem; color: var(--primary);">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <h3 style="color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; margin: 0 0 10px 0;">Líder Actual</h3>
+                <div class="value" style="font-size: 1.8rem; font-weight: 800; color: var(--primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    {{ resumen.mejorEquipoNombre || 'N/A' }}
+                </div>
+                <div style="margin-top: 8px; font-size: 0.85rem; color: #eab308; font-weight: 600;">
+                    <i class="fas fa-star"></i> Mejor Clasificado
+                </div>
             </div>
         </div>
 
-        <div class="next-matches-card card">
-            <h3>Próximos Encuentros (Top 3)</h3>
-            <table class="match-table">
+        <div class="glass-card" style="padding: 0; overflow: hidden;">
+            <div style="padding: 24px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0; color: var(--primary);">Próximos Encuentros</h3>
+                <span class="badge" style="background: var(--bg-main); color: var(--text-muted);">Top 3</span>
+            </div>
+            
+            <table class="match-table" style="width: 100%; border-collapse: collapse;">
                 <thead>
-                    <tr>
-                        <th>Local</th>
-                        <th>Visitante</th>
-                        <th>Fecha y Hora</th>
-                        <th>Acción</th>
+                    <tr style="background: #f9fafb;">
+                        <th style="padding: 16px 24px; text-align: left; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Enfrentamiento</th>
+                        <th style="padding: 16px 24px; text-align: left; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Fecha</th>
+                        <th style="padding: 16px 24px; text-align: right; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Acción</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngIf="resumen.proximosPartidos?.length === 0">
-                        <td colspan="4" class="no-data">No hay partidos pendientes.</td>
+                        <td colspan="3" class="no-data" style="padding: 30px; text-align: center; color: var(--text-muted);">
+                            No hay partidos pendientes.
+                        </td>
                     </tr>
-                    <tr *ngFor="let partido of resumen.proximosPartidos">
-                        <td>{{ partido.nombre_local || 'Equipo' }}</td> 
-                        <td>{{ partido.nombre_visitante || 'Equipo' }}</td>
-                        <td>{{ partido.fecha_hora | date: 'medium' }}</td>
-                        <td>
-                            <a [routerLink]="['/partidos/actualizar', partido.id_partido]" class="action-link">Ingresar Resultado</a>
+                    <tr *ngFor="let partido of resumen.proximosPartidos" style="border-bottom: 1px solid var(--border-light);">
+                        <td style="padding: 16px 24px;">
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <span style="font-weight: 700; color: var(--primary);">{{ partido.nombre_local || 'Local' }}</span>
+                                <span style="background: var(--accent-soft); color: var(--accent); padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 800;">VS</span>
+                                <span style="font-weight: 700; color: var(--primary);">{{ partido.nombre_visitante || 'Visitante' }}</span>
+                            </div>
+                        </td>
+                        <td style="padding: 16px 24px; color: var(--text-muted);">
+                            <i class="far fa-clock" style="margin-right: 5px;"></i> {{ partido.fecha_hora | date: 'mediumDate' }}
+                        </td>
+                        <td style="padding: 16px 24px; text-align: right;">
+                            <a [routerLink]="['/partidos/actualizar', partido.id_partido]" class="action-link" style="color: #3b82f6; font-weight: 600; text-decoration: none; font-size: 0.9rem;">
+                                Ingresar Resultado &rarr;
+                            </a>
                         </td>
                     </tr>
                 </tbody>
@@ -58,18 +92,18 @@
     </ng-container>
 
     <ng-template #loading>
-        <div class="loading">Cargando resumen del torneo...</div>
+        <div class="loading" style="text-align: center; padding: 50px;">
+            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--accent);"></i>
+            <p style="color: var(--text-muted); margin-top: 10px;">Analizando datos...</p>
+        </div>
     </ng-template>
 
-    <div class="action-card quick-actions">
-        <a [routerLink]="['/torneos/crear']" class="action-button primary">
-            + Crear Nuevo Torneo
-        </a>
-        <a [routerLink]="['/equipos/crear']" class="action-button secondary">
-            + Registrar Equipo
-        </a>
-        <a [routerLink]="['/partidos/tabla']" class="action-button tertiary">
-            Ver Tabla de Posiciones
-        </a>
+    <div class="quick-actions" style="margin-top: 40px; display: flex; gap: 16px; flex-wrap: wrap;">
+        <button [routerLink]="['/torneos/crear']" class="btn-primary">
+            <i class="fas fa-plus-circle"></i> Crear Torneo
+        </button>
+        <button [routerLink]="['/equipos/crear']" class="btn-secondary">
+            <i class="fas fa-shield-alt"></i> Registrar Equipo
+        </button>
     </div>
 </div>

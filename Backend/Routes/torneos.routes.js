@@ -35,7 +35,7 @@ router.post('/', verificarToken, async (req, res) => {
         `;
         const [result] = await req.db.query(query, [id_usuario_organizador, nombre, categoria, fecha_inicio, fecha_fin, estado]);
 
-        // 🟢 CORRECCIÓN: Devolvemos el nombre del torneo en la respuesta para el Frontend
+        //   Devolvemos el nombre del torneo en la respuesta para el Frontend
         res.status(201).json({ 
             message: 'Torneo creado exitosamente', 
             id: result.insertId,

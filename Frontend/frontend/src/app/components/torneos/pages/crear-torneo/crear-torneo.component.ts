@@ -1,76 +1,105 @@
 // frontend/src/app/components/torneos/pages/crear-torneo/crear-torneo.component.ts
 
-import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnInit, inject } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidatorFn } from '@angular/forms'; // Añadir AbstractControl y ValidatorFn
+import { TorneosService } from '../../services/torneos.service';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 
-const base_url = 'http://localhost:3000/api/v1/torneos'; // Usaremos la ruta directa
+//  FUNCIÓN DE VALIDACIÓN: La fecha no puede ser en el pasado
+export function futureDateValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Establecer la hora a medianoche para solo comparar la fecha
+        const dateValue = new Date(control.value);
 
-// Interfaz para la respuesta exitosa del Backend (debe coincidir con torneos.routes.js)
-interface TorneoResponse {
-    message: string;
-    id: number;
-    nombre: string; // <-- CRUCIAL: Debe existir en la respuesta del Backend
+        if (dateValue.getTime() < today.getTime()) {
+            // Si la fecha seleccionada es anterior a hoy
+            return { 'pastDate': { value: control.value } };
+        }
+        return null;
+    };
 }
 
-@Component({
-  selector: 'app-crear-torneo',
-  standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, RouterModule],
-  templateUrl: './crear-torneo.component.html',
-  styleUrls: ['./crear-torneo.component.scss']
-})
-export class CrearTorneoComponent {
+//  FUNCIÓN DE VALIDACIÓN: La fecha de fin debe ser posterior a la de inicio
+export function dateRangeValidator(dateInicioControlName: string): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+        // Obtenemos el formulario completo para comparar los dos campos
+        const formGroup = control.parent as FormGroup; 
+        if (!formGroup) return null;
 
-    private fb = inject(FormBuilder);
-    public router = inject(Router);
-    private http = inject(HttpClient); 
-    
-    public errorMessage: string = '';
-    
-    // Definición del formulario de Torneos
-    public torneoForm: FormGroup = this.fb.group({
-        nombre:          ['', [Validators.required, Validators.minLength(5)]],
-        categoria:       ['', Validators.required],
-        fecha_inicio:    ['', Validators.required],
-        fecha_fin:       ['', Validators.required],
-        costo_inscripcion: [0, [Validators.required, Validators.min(0)]],
-        estado:          ['activo', Validators.required]
-    });
+        const dateInicioControl = formGroup.get(dateInicioControlName);
+        const dateFinValue = new Date(control.value);
+        const dateInicioValue = new Date(dateInicioControl?.value);
 
-    // Función que se ejecuta al enviar el formulario (POST)
-    guardarTorneo() {
-        if (this.torneoForm.invalid) {
-            this.torneoForm.markAllAsTouched();
-            return;
-        }
-
-        const nuevoTorneo = this.torneoForm.value;
-        
-        // El ID de usuario se obtiene del Token JWT
-        const token = localStorage.getItem('token');
-        
-        // Creamos la petición manualmente con el token
-        this.http.post<TorneoResponse>(base_url, nuevoTorneo, { headers: { Authorization: `Bearer ${token}` } }).subscribe({
-            next: (resp) => { // resp es de tipo TorneoResponse
-                console.log('Torneo Creado:', resp);
-                
-                // CORRECCIÓN: Usamos resp.nombre que el Backend debería devolver
-                alert(`Torneo "${resp.nombre}" Creado con ID: ${resp.id}`); 
-                
-                // Éxito: Navegar al Listado de Equipos
-                this.router.navigateByUrl('/equipos'); 
-            },
-            error: (err) => {
-                this.errorMessage = err.error?.error || 'Error al guardar el torneo. Asegúrate de tener permisos.';
-                console.error('Error al crear torneo:', err);
+        // Solo validamos si ambas fechas tienen valor
+        if (dateInicioControl && dateInicioControl.value && control.value) {
+            if (dateFinValue.getTime() < dateInicioValue.getTime()) {
+                // Si la fecha de fin es anterior a la fecha de inicio
+                return { 'dateMismatch': { value: control.value } };
             }
-        });
-    }
+        }
+        return null;
+    };
+}
 
-    cancelar() {
-        this.router.navigateByUrl('/dashboard');
-    }
+
+@Component({
+  selector: 'app-crear-torneo',
+  standalone: true,
+  imports: [ReactiveFormsModule, CommonModule, RouterModule],
+  templateUrl: './crear-torneo.component.html',
+  styleUrls: ['./crear-torneo.component.scss']
+})
+export class CrearTorneoComponent implements OnInit {
+
+  private fb = inject(FormBuilder);
+  private torneosService = inject(TorneosService);
+  private router = inject(Router);
+  
+  public errorMessage: string = '';
+  
+  public torneoForm: FormGroup = this.fb.group({
+    nombre:           ['', [Validators.required, Validators.minLength(4)]],
+    categoria:        ['', Validators.required],
+    //  APLICACIÓN DE VALIDACIÓN: futureDateValidator
+    fecha_inicio:     ['', [Validators.required, futureDateValidator()]], 
+    //  APLICACIÓN DE VALIDACIÓN: dateRangeValidator
+    fecha_fin:        ['', [Validators.required, dateRangeValidator('fecha_inicio')]], 
+    costo_inscripcion: [0, [Validators.min(0)]],
+    estado:           ['activo', Validators.required],
+  });
+    
+    ngOnInit(): void {
+        // Aquí puedes forzar la validación cruzada cuando la fecha de inicio cambia
+        this.torneoForm.get('fecha_inicio')?.valueChanges.subscribe(() => {
+            this.torneoForm.get('fecha_fin')?.updateValueAndValidity();
+        });
+    }
+
+  guardarTorneo() {
+    if (this.torneoForm.invalid) {
+      this.torneoForm.markAllAsTouched();
+      return;
+    }
+
+    // ... (Lógica de guardado existente)
+    const nuevoTorneo = this.torneoForm.value;
+
+    this.torneosService.createTorneo(nuevoTorneo).subscribe({
+        next: (resp) => {
+            alert('Torneo creado con éxito.');
+            this.router.navigate(['/torneos']);
+        },
+        error: (err) => {
+            this.errorMessage = err.error?.error || 'Error al guardar el torneo. Revisa el Backend.';
+            console.error('Error al crear torneo:', err);
+        }
+    });
+  }
+  
+  //  FUNCIÓN AÑADIDA: Resuelve el error de compilación y navega de vuelta
+  cancelar() {
+    this.router.navigateByUrl('/torneos');
+  }
 }

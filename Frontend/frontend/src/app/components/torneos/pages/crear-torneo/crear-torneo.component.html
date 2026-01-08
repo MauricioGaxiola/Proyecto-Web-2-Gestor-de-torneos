@@ -34,16 +34,34 @@
             <div class="input-group">
                 <label for="fecha_inicio">Fecha de Inicio</label>
                 <input type="date" formControlName="fecha_inicio" required>
+                <div *ngIf="torneoForm.get('fecha_inicio')?.hasError('pastDate') && torneoForm.get('fecha_inicio')?.touched" class="validation-error">
+                    La fecha de inicio no puede ser anterior al día de hoy.
+                </div>
+                <div *ngIf="torneoForm.get('fecha_inicio')?.hasError('required') && torneoForm.get('fecha_inicio')?.touched" class="validation-error">
+                    La fecha de inicio es obligatoria.
+                </div>
             </div>
 
             <div class="input-group">
                 <label for="fecha_fin">Fecha de Finalización</label>
                 <input type="date" formControlName="fecha_fin" required>
+                <div *ngIf="torneoForm.get('fecha_fin')?.hasError('pastDate') && torneoForm.get('fecha_fin')?.touched" class="validation-error">
+                    La fecha de fin no puede ser anterior al día de hoy.
+                </div>
+                <div *ngIf="torneoForm.get('fecha_fin')?.hasError('dateMismatch') && torneoForm.get('fecha_fin')?.touched" class="validation-error">
+                    La fecha de fin debe ser posterior o igual a la fecha de inicio.
+                </div>
+                <div *ngIf="torneoForm.get('fecha_fin')?.hasError('required') && torneoForm.get('fecha_fin')?.touched" class="validation-error">
+                    La fecha de fin es obligatoria.
+                </div>
             </div>
 
             <div class="input-group">
                 <label for="costo">Costo de Inscripción ($)</label>
                 <input type="number" formControlName="costo_inscripcion" required min="0">
+                <div *ngIf="torneoForm.get('costo_inscripcion')?.invalid && torneoForm.get('costo_inscripcion')?.touched" class="validation-error">
+                    El costo es obligatorio y debe ser 0 o mayor.
+                </div>
             </div>
             
             <div class="button-group">

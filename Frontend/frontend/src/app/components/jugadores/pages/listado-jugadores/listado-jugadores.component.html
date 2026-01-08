@@ -1,64 +1,63 @@
-<div class="main-container">
+<div class="main-content-container">
+    <header class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <div>
+            <h2 style="margin: 0; border: none;">Plantilla: {{ nombreEquipo }}</h2>
+            <p style="color: #64748b; margin-top: 5px;">Gestión de jugadores inscritos</p>
+        </div>
+        
+        <div style="display: flex; gap: 10px;">
+            <button class="btn-action view" (click)="volverAEquipos()" style="width: auto; padding: 10px 20px; background: #e2e8f0;">
+                <i class="fas fa-arrow-left"></i> Volver
+            </button>
+            <button class="btn-primary" (click)="agregarJugador()" style="width: auto; padding: 10px 25px;">
+                <i class="fas fa-user-plus"></i> Nuevo Jugador
+            </button>
+        </div>
+    </header>
 
-    <h2>Jugadores del Equipo: {{ nombreEquipo }}</h2>
-
-    <div *ngIf="error" class="error-message">
-
-        {{ error }}
-
-        <button class="back-button" (click)="volverAEquipos()">Volver al Listado de Equipos</button>
-
+    <div *ngIf="error" class="error-message" style="background: #fee2e2; color: #dc2626; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+        <i class="fas fa-exclamation-circle"></i> {{ error }}
     </div>
 
-    <div *ngIf="!error">
+    <ng-container *ngIf="(jugadores$ | async) as jugadores; else loading">
+        <div class="jugadores-grid" *ngIf="jugadores.length > 0; else noData">
+            
+            <div class="jugador-card" *ngFor="let jugador of jugadores">
+                <div class="jugador-avatar">
+                    <i class="fas fa-running"></i>
+                </div>
+                
+                <div class="jugador-info">
+                    <h3>{{ jugador.nombre }}</h3>
+                    <p><i class="fas fa-shield-alt"></i> {{ jugador.posicion || 'Sin posición' }}</p>
+                    <p><i class="fas fa-calendar-alt"></i> {{ jugador.fecha_nacimiento | date:'mediumDate' }}</p>
+                </div>
 
-        <div class="actions">
-
-            <button class="add-button" (click)="router.navigate(['/equipos', idEquipo, 'jugadores', 'crear'])">
-
-    + Agregar Nuevo Jugador
-
-</button>
-
-            <button class="back-button" (click)="volverAEquipos()">Volver a Equipos</button>
+                <div class="jugador-actions">
+                    <button class="edit" (click)="editarJugador(jugador.id_jugador!)" title="Editar">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="delete" (click)="eliminarJugador(jugador.id_jugador!, jugador.nombre)" title="Eliminar">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            </div>
 
         </div>
 
-        <table *ngIf="(jugadores$ | async) as jugadores; else loading">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre Completo</th>
-                    <th>Posición</th>
-                    <th>Fecha Nacimiento</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngIf="jugadores.length === 0">
-
-                    <td colspan="5" class="no-data">Aún no hay jugadores registrados en este equipo.</td>
-
-                </tr>
-                <tr *ngFor="let jugador of jugadores">
-
-                    <td>{{ jugador.id_jugador }}</td>
-                    <td>{{ jugador.nombre }}</td>
-                    <td>{{ jugador.posicion || 'N/A' }}</td>
-                    <td>{{ jugador.fecha_nacimiento | date: 'mediumDate' }}</td>
-                    <td>
-                        <button class="action-btn edit-btn">Editar</button>
-                        <button class="action-btn delete-btn">Eliminar</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <ng-template #loading>
-
-            <div class="loading">Cargando jugadores...</div>
-
+        <ng-template #noData>
+            <div style="text-align: center; padding: 60px; background: white; border-radius: 20px; border: 2px dashed #e2e8f0;">
+                <i class="fas fa-user-friends" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 15px;"></i>
+                <h3>No hay jugadores en este equipo</h3>
+                <p>Haz clic en "Nuevo Jugador" para empezar la plantilla.</p>
+            </div>
         </ng-template>
+    </ng-container>
 
-    </div>
-
+    <ng-template #loading>
+        <div class="loading" style="text-align: center; padding: 50px;">
+            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #22c55e;"></i>
+            <p>Buscando jugadores en el vestuario...</p>
+        </div>
+    </ng-template>
 </div>

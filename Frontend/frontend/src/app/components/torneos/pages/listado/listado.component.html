@@ -1,66 +1,101 @@
-<div class="main-container">
-    <h2>Listado General de Torneos</h2>
-    <p class="summary-text">Aquí puedes ver, crear y gestionar todas tus ligas.</p>
+<div class="main-content dashboard-container">
+    
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px;">
+        <div>
+            <h1 style="font-size: 1.8rem; font-weight: 800; color: var(--primary); margin: 0 0 8px 0;">Mis Torneos</h1>
+            <p style="color: var(--text-muted); margin: 0;">Administra tus competiciones, categorías y estados.</p>
+        </div>
+        
+        <button class="btn-primary" (click)="router.navigateByUrl('/torneos/crear')">
+            <i class="fas fa-plus-circle"></i> Nuevo Torneo
+        </button>
+    </div>
 
-    <button class="add-button" (click)="router.navigateByUrl('/torneos/crear')">
-        + Crear Nuevo Torneo
-    </button>
+    <div *ngIf="error" class="error-message" style="background: #fee2e2; color: #b91c1c; padding: 16px; border-radius: 12px; margin-bottom: 20px;">
+        <i class="fas fa-exclamation-circle"></i> {{ error }}
+    </div>
 
-    <div *ngIf="error" class="error-message">
-        {{ error }}
-    </div>
+    <div class="glass-card" style="padding: 0; overflow: hidden;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead style="background: #f8fafc; border-bottom: 1px solid var(--border-light);">
+                <tr>
+                    <th style="padding: 18px 24px; text-align: left; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">ID</th>
+                    <th style="padding: 18px 24px; text-align: left; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">Torneo</th>
+                    <th style="padding: 18px 24px; text-align: left; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">Categoría</th>
+                    <th style="padding: 18px 24px; text-align: left; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">Fechas</th>
+                    <th style="padding: 18px 24px; text-align: left; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">Estado</th>
+                    <th style="padding: 18px 24px; text-align: right; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="(torneos$ | async)?.length === 0">
+                    <td colspan="6" style="padding: 40px; text-align: center;">
+                        <div style="margin-bottom: 15px; color: var(--text-muted); font-size: 2rem; opacity: 0.3;">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <p style="color: var(--text-muted);">No tienes torneos activos.</p>
+                        <button class="btn-secondary" (click)="router.navigateByUrl('/torneos/crear')" style="margin-top: 10px;">
+                            Crear el primero
+                        </button>
+                    </td>
+                </tr>
 
-    <table *ngIf="(torneos$ | async) as torneos; else loading">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Categoría</th>
-                <th>Fecha Inicio</th>
-                <th>Fecha Fin</th>
-                <th>Costo</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngIf="torneos.length === 0">
-                <td colspan="8" class="no-data">Aún no hay torneos registrados.</td>
-            </tr>
-            <tr *ngFor="let torneo of torneos">
-           <td>{{ torneo.id_torneo }}</td>
-           <td>{{ torneo.nombre }}</td>
-           <td>{{ torneo.categoria }}</td>
-           <td>{{ torneo.fecha_inicio | date: 'mediumDate' }}</td>
-           <td>{{ torneo.fecha_fin | date: 'mediumDate' }}</td>
-           <td>{{ torneo.costo_inscripcion | currency: 'USD' }}</td>
-                <td>
-          <span [ngClass]="{
-          'active-chip': torneo.estado === 'activo',
-          'finished-chip': torneo.estado === 'finalizado',
-          'pending-chip': torneo.estado === 'pendiente'
-                    }">
-                        {{ torneo.estado | uppercase }}
-                    </span>
-                </td>
-                <td>
-                 <a [routerLink]="['/equipos', torneo.id_torneo]" 
-                       class="action-btn view-btn">
-                        Ver Equipos
-                    </a>
-                    <button class="action-btn edit-btn" (click)="editarTorneo(torneo.id_torneo!)">Editar</button>
-                    
-                    <button 
-        class="action-btn delete-btn" 
-        (click)="eliminarTorneo(torneo.id_torneo!, torneo.nombre)">
-Eliminar
-</button>
-</td>
-</tr>
-</tbody>
-</table>
+                <tr *ngFor="let torneo of (torneos$ | async)" style="border-bottom: 1px solid var(--border-light);">
+                    <td style="padding: 18px 24px; color: var(--text-muted); font-weight: 600;">#{{ torneo.id_torneo }}</td>
+                    
+                    <td style="padding: 18px 24px;">
+                        <span style="display: block; font-weight: 700; color: var(--primary); font-size: 0.95rem;">{{ torneo.nombre }}</span>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">Costo: {{ torneo.costo_inscripcion | currency:'USD' }}</span>
+                    </td>
+                    
+                    <td style="padding: 18px 24px;">
+                        <span style="background: #f1f5f9; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">
+                            {{ torneo.categoria }}
+                        </span>
+                    </td>
+                    
+                    <td style="padding: 18px 24px; font-size: 0.9rem; color: var(--text-muted);">
+                        <div style="display: flex; flex-direction: column;">
+                            <span><i class="far fa-calendar-check" style="width: 15px;"></i> {{ torneo.fecha_inicio | date:'mediumDate' }}</span>
+                            <span style="font-size: 0.8rem; opacity: 0.7;">Fin: {{ torneo.fecha_fin | date:'mediumDate' }}</span>
+                        </div>
+                    </td>
+                    
+                    <td style="padding: 18px 24px;">
+                        <span [ngClass]="{
+                            'active-chip': torneo.estado === 'activo',
+                            'pending-chip': torneo.estado === 'pendiente',
+                            'finished-chip': torneo.estado === 'finalizado'
+                        }" 
+                        style="padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;"
+                        [style.background]="torneo.estado === 'activo' ? 'var(--accent-soft)' : (torneo.estado === 'pendiente' ? '#fff7ed' : '#fef2f2')"
+                        [style.color]="torneo.estado === 'activo' ? 'var(--accent)' : (torneo.estado === 'pendiente' ? '#c2410c' : '#ef4444')">
+                            {{ torneo.estado }}
+                        </span>
+                    </td>
+                    
+                    <td style="padding: 18px 24px; text-align: right;">
+                        <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                            <a [routerLink]="['/equipos', torneo.id_torneo]" class="btn-secondary" style="padding: 8px 12px; font-size: 0.9rem;" title="Gestionar Equipos">
+                                <i class="fas fa-users"></i>
+                            </a>
+                            <button class="btn-secondary" (click)="editarTorneo(torneo.id_torneo!)" style="padding: 8px 12px; font-size: 0.9rem; color: #d97706;" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-secondary" (click)="eliminarTorneo(torneo.id_torneo!, torneo.nombre)" style="padding: 8px 12px; font-size: 0.9rem; color: var(--danger);" title="Eliminar">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-    <ng-template #loading>
-        <div class="loading">Cargando torneos...</div>
-    </ng-template>
+    <ng-template #loading>
+        <div class="glass-card" style="text-align: center; padding: 60px;">
+            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--accent);"></i>
+            <p style="margin-top: 15px; color: var(--text-muted);">Cargando tus torneos...</p>
+        </div>
+    </ng-template>
 </div>

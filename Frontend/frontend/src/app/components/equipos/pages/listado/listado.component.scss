@@ -1,81 +1,86 @@
 /* frontend/src/app/components/equipos/pages/listado/listado.component.scss */
 
-.listado-container {
-    padding: 30px;
-    font-family: Arial, sans-serif;
+.torneos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+  padding: 20px 0;
 }
 
-h2 {
-    color: #004d40;
-    margin-bottom: 20px;
-}
+.torneo-card {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #e2e8f0;
 
-.toolbar {
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+  }
+
+  .card-banner {
+    height: 120px;
+    background: linear-gradient(135deg, #0f172a 0%, #22c55e 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 3rem;
+  }
+
+  .card-body {
+    padding: 20px;
+
+    h3 {
+      margin: 0 0 10px 0;
+      font-size: 1.25rem;
+      color: #1e293b;
+      font-weight: 700;
+    }
+
+    .info-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #64748b;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+    }
+  }
+
+  .card-footer {
+    padding: 15px 20px;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-    padding: 15px;
-    background-color: #e8f5e9; // Verde muy claro
-    border-radius: 8px;
+    gap: 10px;
+  }
 }
 
-.add-button {
-    padding: 10px 20px;
-    background-color: #00796b;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
+.badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  &.active { background: #dcfce7; color: #166534; }
 }
 
-/* Estilos de la tabla */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    background-color: white;
-}
-
-th, td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-th {
-    background-color: #f2f2f2;
-    color: #333;
-    font-weight: bold;
-}
-
-/* Estilos de estado de pago */
-td.pagado {
-    color: #388e3c; // Verde oscuro
-    font-weight: bold;
-}
-
-/* Estilos de acciones */
-.action-btn {
-    padding: 6px 10px;
-    margin-right: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 13px;
-    background-color: #fff;
-    transition: background-color 0.2s;
-}
-
-.action-btn:hover {
-    background-color: #f0f0f0;
-}
-
-.empty-state {
-    padding: 30px;
-    text-align: center;
-    background-color: #fff3e0;
-    border: 1px solid #ffcc80;
-    border-radius: 8px;
+.btn-action {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: 0.2s;
+  text-align: center;
+  text-decoration: none;
+  
+  &.view { background: #f1f5f9; color: #475569; &:hover { background: #e2e8f0; } }
+  &.manage { background: #22c55e; color: white; &:hover { background: #16a34a; } }
 }

@@ -1,44 +1,54 @@
-<div class="form-container">
-    <div class="card">
-        <h2>Registrar Nuevo Equipo</h2>
+<div class="form-container" style="max-width: 650px; margin: 0 auto;">
+    
+    <div class="glass-card">
+        <header style="text-align: center; margin-bottom: 32px;">
+            <h2 style="font-size: 1.8rem; font-weight: 800; color: var(--primary); margin: 0 0 8px 0;">Registrar Nuevo Equipo</h2>
+            <p style="color: var(--text-muted); margin: 0;">Ingresa los datos oficiales para la inscripción.</p>
+        </header>
 
-        <div *ngIf="errorMessage" class="error-message">
-            {{ errorMessage }}
+        <div *ngIf="errorMessage" class="error-message" style="background: #fee2e2; color: #b91c1c; padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+            <i class="fas fa-exclamation-triangle"></i> {{ errorMessage }}
         </div>
 
         <form [formGroup]="equipoForm" (ngSubmit)="guardarEquipo()">
             
             <input type="hidden" formControlName="id_torneo">
 
-            <div class="input-group">
-                <label for="nombre">Nombre del Equipo</label>
-                <input type="text" formControlName="nombre" placeholder="Ej: Rayos del Norte" required>
-                <div *ngIf="equipoForm.get('nombre')?.invalid && equipoForm.get('nombre')?.touched" class="validation-error">
-                    El nombre es obligatorio y debe tener al menos 3 caracteres.
+            <div class="form-group">
+                <label for="nombre">Nombre del Club / Equipo</label>
+                <input type="text" formControlName="nombre" placeholder="Ej: Rayos del Norte FC">
+                <div *ngIf="equipoForm.get('nombre')?.invalid && equipoForm.get('nombre')?.touched" style="color: var(--danger); font-size: 0.8rem; margin-top: 5px;">
+                    El nombre es obligatorio (mín. 3 caracteres).
                 </div>
             </div>
 
-            <div class="input-group">
-                <label for="contacto_capitan">Nombre del Capitán</label>
-                <input type="text" formControlName="contacto_capitan" placeholder="Nombre completo" required>
-                <div *ngIf="equipoForm.get('contacto_capitan')?.invalid && equipoForm.get('contacto_capitan')?.touched" class="validation-error">
-                    El nombre del capitán es obligatorio.
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="form-group">
+                    <label for="contacto_capitan">Nombre del Capitán</label>
+                    <input type="text" formControlName="contacto_capitan" placeholder="Nombre completo">
+                    <div *ngIf="equipoForm.get('contacto_capitan')?.invalid && equipoForm.get('contacto_capitan')?.touched" style="color: var(--danger); font-size: 0.8rem; margin-top: 5px;">
+                        Campo obligatorio.
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono_capitan">Teléfono de Contacto</label>
+                    <input type="text" formControlName="telefono_capitan" placeholder="Ej: 555-000-0000">
                 </div>
             </div>
 
-            <div class="input-group">
-                <label for="telefono_capitan">Teléfono</label>
-                <input type="text" formControlName="telefono_capitan" placeholder="Ej: 555-1234" required>
+            <div class="form-group" style="background: #f1f5f9; padding: 15px; border-radius: 10px; display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                <input type="checkbox" id="pagado" formControlName="pagado" style="width: 20px; height: 20px; accent-color: var(--accent);">
+                <label for="pagado" style="margin: 0; cursor: pointer; color: var(--primary); font-weight: 700;">Inscripción Pagada</label>
             </div>
 
-            <div class="input-group checkbox-group">
-                <input type="checkbox" id="pagado" formControlName="pagado">
-                <label for="pagado">Inscripción Pagada</label>
-            </div>
-
-            <div class="button-group">
-                <button type="button" class="cancel-button" (click)="cancelar()">Cancelar</button>
-                <button type="submit" [disabled]="equipoForm.invalid" class="save-button">Guardar Equipo</button>
+            <div class="button-group" style="display: flex; gap: 16px; margin-top: 32px;">
+                <button type="button" class="btn-secondary" (click)="cancelar()" style="flex: 1;">
+                    Cancelar
+                </button>
+                <button type="submit" [disabled]="equipoForm.invalid" class="btn-primary" style="flex: 2;">
+                    <i class="fas fa-save"></i> Guardar Equipo
+                </button>
             </div>
         </form>
     </div>

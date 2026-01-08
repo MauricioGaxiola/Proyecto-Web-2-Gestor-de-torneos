@@ -170,7 +170,7 @@ export class CrearPartidoComponent implements OnInit {
   }
 
   cancelar() {
-    // CORRECCIÓN 2: Usamos el router público para navegar
+    //  Usamos el router público para navegar
     this.router.navigateByUrl('/partidos'); 
   }
 }

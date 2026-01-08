@@ -1,52 +1,64 @@
- <div class="listado-container">
-    <h2>Gestión de Equipos</h2>
+ <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+  <div>
+    <h1 style="margin: 0; color: #0f172a;">{{ nombreTorneoActivo }}</h1>
+    <p style="color: #64748b; margin: 5px 0 0 0;">Lista de equipos inscritos en esta competición</p>
+  </div>
+  
+  <div style="display: flex; gap: 10px;">
+    <button class="btn-action view" routerLink="/torneos" style="width: auto; padding: 12px 20px;">
+      <i class="fas fa-arrow-left"></i> Volver
+    </button>
+    <button class="btn-primary" [routerLink]="['/equipos/crear', idTorneoActivo]" style="width: auto; padding: 12px 25px;">
+      <i class="fas fa-plus"></i> Registrar Equipo
+    </button>
+  </div>
+</div>
 
-    <div class="toolbar">
-        <p>Torneo Actual: {{ nombreTorneoActivo }} (ID: {{ idTorneoActivo }})</p>
-        
-                <button 
-            class="add-button" 
-            [routerLink]="['/equipos/crear', idTorneoActivo]"> 
-            + Agregar Nuevo Equipo
-        </button>
-    </div>
+<div class="torneos-grid">
+  <div class="torneo-card" *ngFor="let equipo of equipos">
+    <div class="card-banner" style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%);">
+      <i class="fas fa-shield-alt"></i>
+    </div>
+    
+    <div class="card-body">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <h3 style="text-transform: uppercase; letter-spacing: 1px;">{{ equipo.nombre }}</h3>
+        <span class="badge active">Inscrito</span>
+      </div>
+      
+      <div class="info-row">
+        <i class="fas fa-users"></i>
+        <span>Gestión de plantilla y capitanes</span>
+      </div>
+    </div>
 
-    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+    <div class="card-footer" style="flex-wrap: wrap;">
+      <a [routerLink]="['/equipos', equipo.id_equipo, 'jugadores']" class="btn-action manage" style="width: 100%; margin-bottom: 8px; text-align: center;">
+        <i class="fas fa-user-friends"></i> Ver Jugadores
+      </a>
+      
+      <button (click)="editarEquipo(equipo.id_equipo)" class="btn-action view" style="flex: 1;">
+        <i class="fas fa-edit"></i> Editar
+      </button>
+      
+      <button (click)="eliminarEquipo(equipo.id_equipo, equipo.nombre)" class="btn-action view" style="flex: 1; color: #dc2626;">
+        <i class="fas fa-trash-alt"></i>
+      </button>
+    </div>
+  </div>
+</div>
 
-    <div *ngIf="equipos.length === 0 && !errorMessage" class="empty-state">
-        <p>Aún no hay equipos registrados en este torneo.</p>
-    </div>
+<div *ngIf="equipos.length === 0 && !errorMessage" style="text-align: center; padding: 60px; background: white; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+  <div style="font-size: 4rem; color: #e2e8f0; margin-bottom: 20px;">
+    <i class="fas fa-shield-virus"></i>
+  </div>
+  <h3 style="color: #1e293b;">No hay equipos en este torneo</h3>
+  <p style="color: #64748b;">Parece que aún no has registrado ningún club. ¡Comienza ahora!</p>
+  <button class="btn-primary" [routerLink]="['/equipos/crear', idTorneoActivo]" style="width: auto; margin-top: 15px; padding: 10px 30px;">
+    Registrar Primer Equipo
+  </button>
+</div>
 
-    <table *ngIf="equipos.length > 0">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nombre del Equipo</th>
-                <th>Capitán</th>
-                <th>Teléfono</th>
-                <th>Estado de Pago</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let equipo of equipos">
-                <td>{{ equipo.id_equipo }}</td>
-                <td>{{ equipo.nombre }}</td>
-                <td>{{ equipo.contacto_capitan }}</td>
-                <td>{{ equipo.telefono_capitan }}</td>
-                <td [class.pagado]="equipo.pagado">{{ equipo.pagado ? 'Pagado' : 'Pendiente' }}</td>
-                <td>
-                     <a [routerLink]="['/', 'equipos', equipo.id_equipo, 'jugadores']" class="action-btn view-btn">Ver Jugadores</a>
-                    
-                     <a [routerLink]="['/equipos/editar', equipo.id_equipo]" class="action-btn edit-btn">Editar</a>
-                    
-                     <button 
-                        class="action-btn delete-btn" 
-                        (click)="eliminarEquipo(equipo.id_equipo!, equipo.nombre)">
-                        Eliminar
-                    </button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<div *ngIf="errorMessage" class="alert error" style="margin-top: 20px; background: #fee2e2; color: #dc2626; padding: 15px; border-radius: 10px; border-left: 5px solid #dc2626;">
+  <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
 </div>

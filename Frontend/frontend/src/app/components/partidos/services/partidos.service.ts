@@ -77,5 +77,5 @@ export class PartidosService {
 getGoleadores(idTorneo: number): Observable<any[]> {
     const headers = this.getHeaders();
     return this.http.get<any[]>(`${base_url}/partidos/goleadores/${idTorneo}`, { headers });
-}
+  }
 }

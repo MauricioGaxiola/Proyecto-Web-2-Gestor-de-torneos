@@ -1,0 +1,57 @@
+<div class="dashboard-wrapper" *ngIf="showNavbar">
+  
+  <aside class="sidebar" style="width: var(--sidebar-width); background: var(--primary); position: fixed; height: 100vh; display: flex; flex-direction: column; z-index: 100;">
+    <div class="sidebar-header" style="padding: 32px 24px; display: flex; align-items: center; gap: 12px;">
+      <i class="fas fa-futbol" style="font-size: 1.8rem; color: var(--accent);"></i>
+      <span style="color: white; font-weight: 800; font-size: 1.4rem; letter-spacing: 1px;">LIGA PRO</span>
+    </div>
+    
+    <nav class="sidebar-nav" style="flex: 1; padding: 0 16px;">
+      <a routerLink="/dashboard" routerLinkActive="active" style="display: flex; align-items: center; padding: 14px 16px; color: #94a3b8; text-decoration: none; border-radius: 12px; margin-bottom: 4px; transition: 0.3s;">
+        <i class="fas fa-chart-line" style="width: 28px;"></i> Inicio
+      </a>
+      <a routerLink="/torneos" routerLinkActive="active" style="display: flex; align-items: center; padding: 14px 16px; color: #94a3b8; text-decoration: none; border-radius: 12px; margin-bottom: 4px; transition: 0.3s;">
+        <i class="fas fa-trophy" style="width: 28px;"></i> Mis Torneos
+      </a>
+      <a routerLink="/partidos" routerLinkActive="active" style="display: flex; align-items: center; padding: 14px 16px; color: #94a3b8; text-decoration: none; border-radius: 12px; margin-bottom: 4px; transition: 0.3s;">
+        <i class="fas fa-calendar-alt" style="width: 28px;"></i> Partidos
+      </a>
+      <a routerLink="/equipos" routerLinkActive="active" style="display: flex; align-items: center; padding: 14px 16px; color: #94a3b8; text-decoration: none; border-radius: 12px; margin-bottom: 4px; transition: 0.3s;">
+        <i class="fas fa-users" style="width: 28px;"></i> Equipos
+      </a>
+    </nav>
+
+    <div class="sidebar-footer" style="padding: 24px; border-top: 1px solid rgba(255,255,255,0.05);">
+      <button (click)="logout()" style="width: 100%; background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s;">
+        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+      </button>
+    </div>
+  </aside>
+
+  <main class="main-content" style="margin-left: var(--sidebar-width); flex: 1; min-height: 100vh; display: flex; flex-direction: column;">
+    
+    <header class="top-header" style="height: var(--header-height); background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; padding: 0 40px; position: sticky; top: 0; z-index: 90;">
+      <div class="breadcrumb" style="color: var(--text-muted); font-size: 0.9rem;">
+        Panel / <strong style="color: var(--primary); text-transform: uppercase;">{{ currentRouteName }}</strong>
+      </div>
+      
+      <div class="user-profile" style="display: flex; align-items: center; gap: 16px;">
+        <div style="text-align: right; line-height: 1.2;">
+          <span style="display: block; font-weight: 700; color: var(--primary);">{{ userName }}</span>
+          <small style="color: var(--text-muted); font-size: 0.75rem;">Administrador</small>
+        </div>
+        <div class="avatar" style="width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent), #16a34a); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(34, 197, 94, 0.25);">
+          {{ userName.charAt(0).toUpperCase() }}
+        </div>
+      </div>
+    </header>
+    
+    <section class="content-body" style="padding: 40px; flex: 1;">
+      <router-outlet></router-outlet>
+    </section>
+  </main>
+</div>
+
+<div *ngIf="!showNavbar">
+  <router-outlet></router-outlet>
+</div>

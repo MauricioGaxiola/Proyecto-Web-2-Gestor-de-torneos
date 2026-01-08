@@ -1,42 +1,52 @@
-<div class="form-container">
-    <div class="card">
-        <h2>Registrar Jugador (Equipo ID: {{ idEquipo }})</h2>
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <header class="auth-header">
+            <h2>{{ esEdicion ? 'Editar Futbolista' : 'Nuevo Jugador' }}</h2>
+            <p>{{ esEdicion ? 'Modifica los datos en la ficha técnica' : 'Registra un nuevo integrante para el equipo' }}</p>
+        </header>
 
-        <div *ngIf="errorMessage" class="error-message">
-            {{ errorMessage }}
+        <div *ngIf="errorMessage" class="alert error" style="background: #fee2e2; color: #dc2626; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem; font-weight: 600; text-align: center;">
+            <i class="fas fa-exclamation-triangle"></i> {{ errorMessage }}
         </div>
 
         <form [formGroup]="jugadorForm" (ngSubmit)="guardarJugador()">
             
             <input type="hidden" formControlName="id_equipo">
 
-            <div class="input-group">
-                <label for="nombre">Nombre Completo</label>
-                <input type="text" formControlName="nombre" placeholder="Ej: Isagi Yoichi" required>
-                <div *ngIf="jugadorForm.get('nombre')?.invalid && jugadorForm.get('nombre')?.touched" class="validation-error">
-                    El nombre es obligatorio.
+            <div class="form-group">
+                <label>Nombre Completo</label>
+                <input type="text" formControlName="nombre" placeholder="Ej: Lionel Messi">
+                <div *ngIf="jugadorForm.get('nombre')?.invalid && jugadorForm.get('nombre')?.touched" class="validation-error" style="color: #dc2626; font-size: 0.8rem; margin-top: 5px;">
+                    El nombre es obligatorio (mín. 3 letras).
                 </div>
             </div>
 
-            <div class="input-group">
-                <label for="posicion">Posición</label>
-                <select formControlName="posicion" required>
+            <div class="form-group">
+                <label>Posición en el campo</label>
+                <select formControlName="posicion">
                     <option value="">Seleccione Posición</option>
                     <option value="Delantero">Delantero</option>
                     <option value="Medio">Medio Campista</option>
                     <option value="Defensa">Defensa</option>
                     <option value="Portero">Portero</option>
                 </select>
+                <div *ngIf="jugadorForm.get('posicion')?.invalid && jugadorForm.get('posicion')?.touched" class="validation-error" style="color: #dc2626; font-size: 0.8rem; margin-top: 5px;">
+                    Debes asignar una posición.
+                </div>
             </div>
 
-            <div class="input-group">
-                <label for="fecha_nacimiento">Fecha de Nacimiento</label>
-                <input type="date" formControlName="fecha_nacimiento" required>
+            <div class="form-group">
+                <label>Fecha de Nacimiento</label>
+                <input type="date" formControlName="fecha_nacimiento">
             </div>
 
-            <div class="button-group">
-                <button type="button" class="cancel-button" (click)="cancelar()">Cancelar</button>
-                <button type="submit" [disabled]="jugadorForm.invalid" class="save-button">Guardar Jugador</button>
+            <div style="display: flex; gap: 10px; margin-top: 30px;">
+                <button type="button" class="btn-action view" (click)="cancelar()" style="flex: 1; background: #f1f5f9; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 600;">
+                    Cancelar
+                </button>
+                <button type="submit" [disabled]="jugadorForm.invalid" class="btn-primary" style="flex: 2;">
+                    {{ esEdicion ? 'Actualizar Ficha' : 'Guardar Jugador' }}
+                </button>
             </div>
         </form>
     </div>

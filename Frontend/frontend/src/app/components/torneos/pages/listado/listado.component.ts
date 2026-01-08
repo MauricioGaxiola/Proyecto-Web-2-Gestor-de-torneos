@@ -29,7 +29,7 @@ export class ListadoComponent implements OnInit {
   }
 
   cargarTorneos(): void {
-    // 🟢 LÓGICA CORREGIDA: Llama al servicio que pide la lista de Torneos del Backend
+    //  LÓGICA CORREGIDA: Llama al servicio que pide la lista de Torneos del Backend
     this.torneos$ = this.torneosService.getTorneos().pipe(
       catchError(err => {
         this.error = 'Error al cargar el listado de torneos.';
@@ -44,13 +44,13 @@ export class ListadoComponent implements OnInit {
     this.router.navigate(['/torneos/crear']);
   }
   
-  // 🟢 NUEVA FUNCIÓN: Navegar a Edición (PUT)
+  //  NUEVA FUNCIÓN: Navegar a Edición (PUT)
   editarTorneo(idTorneo: number) {
     alert(`Funcionalidad de Edición para Torneo ID ${idTorneo} en desarrollo.`);
     // this.router.navigate(['/torneos/editar', idTorneo]);
   }
   
-  // 🟢 NUEVA FUNCIÓN: Eliminar Torneo (DELETE)
+  //  NUEVA FUNCIÓN: Eliminar Torneo (DELETE)
   eliminarTorneo(idTorneo: number, nombre: string) {
     if (confirm(`¿Estás seguro de eliminar el torneo "${nombre}"? Se borrarán todos los equipos, jugadores y partidos asociados.`)) {
       

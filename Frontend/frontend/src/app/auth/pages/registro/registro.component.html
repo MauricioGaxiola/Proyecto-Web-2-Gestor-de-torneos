@@ -1,71 +1,119 @@
-<div class="login-container">
-    <div class="card">
-      
-      <h2>Registro de Organizador</h2>
-      <p>Crea tu cuenta para gestionar torneos.</p>
-  
-      <form [formGroup]="registroForm" (ngSubmit)="registrar()">
-  
-        <div *ngIf="errorMessage" class="error-message">
-          {{ errorMessage }}
+<div class="auth-wrapper">
+    <div class="auth-card" style="max-width: 550px;"> <header class="auth-header">
+            <div style="font-size: 2.5rem; color: var(--accent); margin-bottom: 10px;">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <h2>Crea tu Perfil</h2>
+            <p>Únete a la mejor plataforma de gestión de torneos</p>
+        </header>
+
+        <div *ngIf="errorMessage" class="alert error" style="background: #fee2e2; color: #dc2626; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem; font-weight: 600; text-align: center;">
+            <i class="fas fa-exclamation-triangle"></i> {{ errorMessage }}
         </div>
 
-        <div class="input-group">
-            <label for="nombre">Nombre Completo</label>
-            <input 
-              type="text" 
-              id="nombre" 
-              formControlName="nombre" 
-              placeholder="Ej: Mauricio Gaxiola"
-              required
-            >
-            <div 
-                *ngIf="registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched" 
-                class="validation-error"
-              >
-              El nombre es requerido.
+        <form [formGroup]="registroForm" (ngSubmit)="registrar()">
+            
+            <div class="form-group input-with-icon">
+                <label for="nombre">Nombre Completo</label>
+                <i class="fas fa-user"></i>
+                <input id="nombre" type="text" formControlName="nombre" placeholder="Ej. Juan Pérez">
+                <div *ngIf="registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched" class="validation-error">
+                    El nombre es obligatorio (mín. 3 caracteres).
+                </div>
             </div>
+
+            <div class="form-group input-with-icon">
+                <label for="email">Correo Electrónico</label>
+                <i class="fas fa-envelope"></i>
+                <input id="email" type="email" formControlName="email" placeholder="correo@ejemplo.com">
+                <div *ngIf="registroForm.get('email')?.invalid && registroForm.get('email')?.touched" class="validation-error">
+                    <span *ngIf="registroForm.get('email')?.hasError('required')">El email es obligatorio.</span>
+                    <span *ngIf="registroForm.get('email')?.hasError('email')">Debe ser un email válido.</span>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="form-group input-with-icon">
+                    <label for="password">Contraseña</label>
+                    <i class="fas fa-lock"></i>
+                    <input id="password" type="password" formControlName="password" placeholder="Mín. 6 chars">
+                    <div *ngIf="registroForm.get('password')?.invalid && registroForm.get('password')?.touched" class="validation-error">
+                        Requerida (6+ chars).
+                    </div>
+                </div>
+
+                <div class="form-group input-with-icon">
+                    <label for="confirmarPassword">Confirmar</label>
+                    <i class="fas fa-check-circle"></i>
+                    <input id="confirmarPassword" type="password" formControlName="confirmarPassword" placeholder="Repite password">
+                    <div *ngIf="registroForm.get('confirmarPassword')?.hasError('noMatch') && registroForm.get('confirmarPassword')?.touched" class="validation-error">
+                        No coinciden.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group input-with-icon">
+                <label for="rol">Tu Rol en la Liga</label>
+                <i class="fas fa-id-badge"></i>
+                <select id="rol" formControlName="rol" style="cursor: pointer;">
+                    <option value="" disabled selected>-- Elige tu Rol --</option>
+                    <option value="organizador"> Organizador de Torneos</option>
+                    <option value="jugador"> Jugador / Capitán</option>
+                </select>
+                <div *ngIf="registroForm.get('rol')?.invalid && registroForm.get('rol')?.touched" class="validation-error">
+                    Debes seleccionar un rol para continuar.
+                </div>
+            </div>
+
+            <div *ngIf="rolSeleccionado === 'organizador'" style="background: var(--accent-soft); padding: 20px; border-radius: 12px; margin-bottom: 24px; border: 1px solid #bbf7d0; animation: fadeIn 0.3s ease-out;">
+                <h4 style="color: #15803d; margin: 0 0 15px 0; font-size: 0.85rem; text-transform: uppercase; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-shield-alt"></i> Datos de Verificación
+                </h4>
+
+                <div class="form-group input-with-icon" style="margin-bottom: 15px;">
+                    <label for="telefono_contacto" style="color: #166534;">Teléfono (WhatsApp)</label>
+                    <i class="fab fa-whatsapp" style="color: #166534;"></i>
+                    <input id="telefono_contacto" type="tel" formControlName="telefono_contacto" placeholder="10 dígitos">
+                    <div *ngIf="registroForm.get('telefono_contacto')?.invalid && registroForm.get('telefono_contacto')?.touched" class="validation-error">
+                        Número inválido.
+                    </div>
+                </div>
+
+                <div class="form-group input-with-icon" style="margin-bottom: 15px;">
+                    <label for="ubicacion_ciudad" style="color: #166534;">Ciudad / Sede</label>
+                    <i class="fas fa-map-marker-alt" style="color: #166534;"></i>
+                    <input id="ubicacion_ciudad" type="text" formControlName="ubicacion_ciudad" placeholder="Ej: Los Mochis, Sinaloa">
+                </div>
+                
+                <div class="form-group input-with-icon" style="margin-bottom: 0;">
+                    <label for="codigo_seguridad" style="color: #166534;">Código de Acceso</label>
+                    <i class="fas fa-key" style="color: #166534;"></i>
+                    <input id="codigo_seguridad" type="text" formControlName="codigo_seguridad" placeholder="4 dígitos (Opcional)">
+                </div>
+            </div>
+
+            <div *ngIf="rolSeleccionado === 'jugador'" style="background: var(--accent-soft); padding: 20px; border-radius: 12px; margin-bottom: 24px; border: 1px solid #bbf7d0; animation: fadeIn 0.3s ease-out;">
+                <h4 style="color: #15803d; margin: 0 0 15px 0; font-size: 0.85rem; text-transform: uppercase; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-running"></i> Ficha del Jugador
+                </h4>
+                
+                <div class="form-group input-with-icon" style="margin-bottom: 0;">
+                    <label for="fecha_nacimiento" style="color: #166534;">Fecha de Nacimiento</label>
+                    <i class="fas fa-birthday-cake" style="color: #166534;"></i>
+                    <input id="fecha_nacimiento" type="date" formControlName="fecha_nacimiento">
+                    <div *ngIf="registroForm.get('fecha_nacimiento')?.invalid && registroForm.get('fecha_nacimiento')?.touched" class="validation-error">
+                        Requerido para categoría.
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" [disabled]="registroForm.invalid" class="btn-primary" style="margin-top: 10px;">
+                FINALIZAR REGISTRO
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            ¿Ya tienes cuenta? <a [routerLink]="['/auth/login']">Inicia sesión</a>
         </div>
-        
-        <div class="input-group">
-          <label for="email">Email</label>
-          <input 
-            type="email" 
-            id="email" 
-            formControlName="email" 
-            placeholder="ejemplo@torneo.com"
-            required
-          >
-          <div 
-            *ngIf="registroForm.get('email')?.invalid && registroForm.get('email')?.touched" 
-            class="validation-error"
-          >
-            Email no válido.
-          </div>
-        </div>
-  
-        <div class="input-group">
-          <label for="password">Contraseña</label>
-          <input 
-            type="password" 
-            id="password" 
-            formControlName="password" 
-            placeholder="Mínimo 6 caracteres"
-            required
-          >
-          <div 
-            *ngIf="registroForm.get('password')?.invalid && registroForm.get('password')?.touched" 
-            class="validation-error"
-          >
-            La contraseña debe tener al menos 6 caracteres.
-          </div>
-        </div>
-  
-        <button type="submit" [disabled]="registroForm.invalid">
-          Crear Cuenta
-        </button>
-  
-        <a [routerLink]="['/auth/login']" class="registro-link">¿Ya tienes cuenta? Inicia Sesión</a>
-      </form>
     </div>
 </div>
